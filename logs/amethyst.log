@@ -1,0 +1,3 @@
+2023-06-29T14:16:36.933+02:00  INFO 20676 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-29T14:16:36.947+02:00  INFO 20676 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-06-29T14:16:36.950+02:00  INFO 20676 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
