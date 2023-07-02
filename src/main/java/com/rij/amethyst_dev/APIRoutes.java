@@ -7,6 +7,7 @@ import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
 import com.rij.amethyst_dev.jsons.Donation;
 import com.rij.amethyst_dev.jsons.Submitname;
+import com.rij.amethyst_dev.jsons.minecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
@@ -222,12 +223,18 @@ public class APIRoutes {
         if(user == null)
             return future.exceptionally(throwable -> ResponseEntity.status(500).body("Something went wrong"));
 
+
+
         mCserverAuthService.addToAuthQueue(user, future);
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.schedule(() -> future.complete(ResponseEntity.status(500).body("Timeout occurred")), 60, TimeUnit.SECONDS);
 
         return future.exceptionally(throwable -> ResponseEntity.status(500).body("Something went wrong"));
+    }
+    @GetMapping("authorize-player2")
+    public CompletableFuture<ResponseEntity<String>> minecraftAuth2(@RequestParam(defaultValue = "") MinecraftSession session) {
+        return null;
     }
 
     @GetMapping("player-left")
