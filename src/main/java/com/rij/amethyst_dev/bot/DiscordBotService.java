@@ -21,11 +21,16 @@ public class DiscordBotService {
 
     public boolean isUserOnServer(String discordid){
         Guild guild = discordBot.getJda().getGuildById(discordBot.getGuildID());
-        Member duser = guild.retrieveMemberById(discordid).complete();
-        System.out.println(duser.getUser().getName());
 
-        System.out.println(guild.isMember(duser));
-        return guild.isMember(duser);
+        //User duser1 = discordBot.getJda().retrieveUserById(discordid).complete();
+
+        try {
+            Member duser = guild.retrieveMemberById(discordid).complete();
+        }catch (Exception e){
+            return false;
+        }
+
+        return true;
     }
 
     public Message sendAuthentiticationMessage(com.rij.amethyst_dev.models.Userdb.User user, String buttonID){

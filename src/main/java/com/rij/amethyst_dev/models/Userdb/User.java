@@ -35,19 +35,18 @@ public class User {
 
     @Column
     @JsonView(Views.Private.class)
-    private boolean hasPayed;
-
-    @Column
-    @JsonView(Views.Private.class)
-    private boolean isMinecraftNameSet;
+    private boolean hasPayed = false;
 
     @Column
     @JsonView(Views.Public.class)
-    private boolean isBanned;
+    private boolean Banned = false;
 
     @JsonView(Views.ServerOnly.class)
     @OneToOne(cascade = CascadeType.ALL)
     private Oauth oauth;
+
+    @JsonView(Views.Private.class)
+    private boolean Admin = false;
 
     @JsonView(Views.ServerOnly.class)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

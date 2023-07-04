@@ -143,6 +143,10 @@ public class UserService {
         return user;
     }
 
+    public List<User> allUsers(){
+        return userRepository.findAll();
+    }
+
     public void purgeUnusedAccessTokens(){
         List<AccessToken> accessTokens = accessTokensRepository.findAll();
 

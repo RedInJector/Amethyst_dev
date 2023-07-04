@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
+import com.rij.amethyst_dev.Helpers.StringComparator;
 import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
 import com.rij.amethyst_dev.jsons.Donation;
 import com.rij.amethyst_dev.jsons.Submitname;
@@ -20,6 +21,7 @@ import org.redinjector.discord.oAuth2.models.DiscordUser;
 import org.redinjector.discord.oAuth2.models.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,8 @@ import java.nio.file.Path;
 @RequestMapping("/api/v1")
 public class APIRoutes {
 
+    @Value("${API_KEY}")
+    private String APIKEY;
 
     private final Authorizator authorizator;
     private final UserService userService;
@@ -161,8 +165,10 @@ public class APIRoutes {
 
         User user = userService.getUserByAccessToken(cookie);
 
+        /*
         if(user.getMinecraftPlayer() != null)
             user.getMinecraftPlayer().setSkinUrl("https://mc-heads.net/skin/c5ef3347-4593-4f39-8bb1-2eaa40dd986e");
+         */
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -210,7 +216,7 @@ public class APIRoutes {
 
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
-
+/*
     @GetMapping("authorize-player")
     public CompletableFuture<ResponseEntity<String>> minecraftAuth(@RequestParam(defaultValue = "") String name) {
 
@@ -232,13 +238,46 @@ public class APIRoutes {
 
         return future.exceptionally(throwable -> ResponseEntity.status(500).body("Something went wrong"));
     }
-    @GetMapping("authorize-player2")
-    public CompletableFuture<ResponseEntity<String>> minecraftAuth2(@RequestParam(defaultValue = "") MinecraftSession session) {
-        return null;
+    */
+
+    @PostMapping("authorize-player2")
+    public CompletableFuture<ResponseEntity<String>> minecraftAuth2(@RequestHeader("Key") String apikey, @RequestBody MinecraftSession session) {
+        CompletableFuture<ResponseEntity<String>> future = new CompletableFuture<>();
+
+        if (!StringComparator.compareAPIKeys(this.APIKEY, apikey)){
+            future.complete(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong"));
+            return future;
+        }
+
+        System.out.println("Player joined " + session.getName());
+
+
+        User user = userService.getUserWithMinecraftname(session.getName());
+        if (user == null){
+            future.complete(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong"));
+            return future;
+        }
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        if(mCserverAuthService.getSessionManager().isValid(session)) {
+            future.complete(ResponseEntity.ok("Something happened successfully"));
+        }else{
+            mCserverAuthService.addToAuthQueue(user, future, session);
+            executorService.schedule(() -> future.complete(ResponseEntity.status(500).body("Timeout occurred")), 60, TimeUnit.SECONDS);
+        }
+
+
+
+        return future.exceptionally(throwable -> ResponseEntity.status(500).body("Something went wrong"));
     }
 
     @GetMapping("player-left")
-    public ResponseEntity<String> minecraftauthleftServer(@RequestParam(defaultValue = "") String name){
+    public ResponseEntity<String> minecraftauthleftServer(@RequestHeader("Key") String apikey, @RequestParam(defaultValue = "") String name){
+        if (!StringComparator.compareAPIKeys(this.APIKEY, apikey)){
+            return ResponseEntity.badRequest().body("Bad Request");
+        }
+
         User user = userService.getUserWithMinecraftname(name);
         System.out.println("Player left " + name);
         mCserverAuthService.PlayerLeft(user);
@@ -276,7 +315,7 @@ public class APIRoutes {
 
         MinecraftPlayer minecraftPlayer = new MinecraftPlayer();
         minecraftPlayer.setPlayerName(body.getName());
-        minecraftPlayer.setAllowedOnServer(true);
+        //minecraftPlayer.setAllowedOnServer(true);
 
         user.setMinecraftPlayer(minecraftPlayer);
         userService.saveUser(user);
@@ -288,8 +327,8 @@ public class APIRoutes {
             produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
         String imageUrl = "https://mc-heads.net/skin/maksutko.png"; // Replace with your image URL
-        Files.createDirectories(Paths.get("./bufferedskins/"));
-        String outputFilePath = "./bufferedskins/" + name + "_skin.png"; // Replace with your desired output file path
+        Files.createDirectories(Paths.get("tmp/bufferedheads/"));
+        String outputFilePath = "tmp/bufferedheads/" + name + "_head.png"; // Replace with your desired output file path
 
         try {
             // Download the image from the URL
@@ -341,8 +380,8 @@ public class APIRoutes {
 
         try {
             BufferedImage originalImage = ImageIO.read(new URL(imageUrl));
-            Files.createDirectories(Paths.get("./bufferedheads/"));
-            String outputFilePath = "./bufferedheads/" + name + "_head.png";
+            Files.createDirectories(Paths.get("tmp/bufferedskins/"));
+            String outputFilePath = "tmp/bufferedskins/" + name + "_skin.png";
 
             File outputFile = new File(outputFilePath);
             ImageIO.write(originalImage, "png", outputFile);

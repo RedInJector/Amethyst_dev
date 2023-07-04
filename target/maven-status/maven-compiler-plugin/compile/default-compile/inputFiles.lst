@@ -6,6 +6,7 @@ G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\oAuthConfig.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\jsons\GetUserPOST.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\jsons\Donation.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\bot\DiscordBot.java
+G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\Helpers\StringComparator.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\Views.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\webSockets\GuildSocket\GuildSocketHandler.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\bot\DiscordEventHandlers\MessageReaction.java
@@ -19,9 +20,11 @@ G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\Userdb\Min
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\bot\DiscordEventHandlers\GuildJoin.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\oAuth\oAuth2Repository.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\MinecraftAuth\CachedEntity.java
+G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\jsons\minecraftAuth\MinecraftSession.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\Userdb\DiscordUserRepository.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\Userdb\AccessTokensRepository.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\Helpers\Authorizator.java
+G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\MinecraftAuth\SessionManager.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\jsons\Submitname.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\models\Userdb\MinecraftPlayerRepository.java
 G:\JavaTesting\Amethyst_dev\src\main\java\com\rij\amethyst_dev\webSockets\WebSocketsConfig.java

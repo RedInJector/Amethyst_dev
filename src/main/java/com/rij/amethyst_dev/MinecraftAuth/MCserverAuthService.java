@@ -3,6 +3,7 @@ package com.rij.amethyst_dev.MinecraftAuth;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.bot.DiscordBotService;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
+import com.rij.amethyst_dev.jsons.minecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Message;
 import org.springframework.context.ApplicationListener;
@@ -25,6 +26,9 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     private final Map<String, CachedEntity> Authqueue = new HashMap<>();
     private final Map<String, String> NameCode = new HashMap<>();
     private final Map<String, String> CodeName = new HashMap<>();
+    //private final Map<String, MinecraftSession> CodeSession  = new HashMap<>();
+
+    private final SessionManager sessionManager = new SessionManager(120);
 
     private final DiscordBotService discordBotService;
     private final ScheduledExecutorService executorService;
@@ -34,14 +38,15 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public void addToAuthQueue(User user, CompletableFuture future){
+    public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> future, MinecraftSession minecraftSession){
         String buttinID = RandomStringGenerator.generate(8);
         Message message = discordBotService.sendAuthentiticationMessage(user, buttinID);
 
-        CachedEntity cachedEntity = new CachedEntity(user.getMinecraftPlayer().getPlayerName(), future, message);
+        CachedEntity cachedEntity = new CachedEntity(user.getMinecraftPlayer().getPlayerName(), future, message, minecraftSession);
         Authqueue.put(buttinID, cachedEntity);
         NameCode.put(user.getMinecraftPlayer().getPlayerName(), buttinID);
         CodeName.put(buttinID, user.getMinecraftPlayer().getPlayerName());
+        //CodeSession.put(buttinID, minecraftSession);
         executorService.schedule(() -> removeElements(buttinID), 61, TimeUnit.SECONDS);
         /*
         System.out.println("--------------------------------------");
@@ -69,13 +74,25 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     }
 
     public void PlayerLeft(User user){
-        if(NameCode.containsKey(user.getMinecraftPlayer().getPlayerName())){
-            String btncode = NameCode.get(user.getMinecraftPlayer().getPlayerName());
-            if(Authqueue.containsKey(btncode))
-                Authqueue.get(btncode).getFuture().complete(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden"));
-
-            removeElements(btncode);
+        String playername = user.getMinecraftPlayer().getPlayerName();
+        if(!NameCode.containsKey(playername)){
+            return;
         }
+
+        String btncode = NameCode.get(playername);
+        if(Authqueue.containsKey(btncode))
+            Authqueue.get(btncode).getFuture().complete(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden"));
+
+        removeElements(btncode);
+    }
+    private void saveSession(String buttonID){
+        if(!Authqueue.containsKey(buttonID))
+            return;
+
+        CachedEntity entity = Authqueue.get(buttonID);
+        MinecraftSession session = entity.getMinecraftSession();
+
+        sessionManager.saveSession(session);
     }
 
 
@@ -83,15 +100,21 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         CachedEntity cachedEntity = Authqueue.get(buttonID);
         if(LocalDateTime.now().isAfter(cachedEntity.getMaxTime())){
             Authqueue.remove(buttonID);
+            removeElements(buttonID);
             return;
         }
-
+        saveSession(buttonID);
         removeElements(buttonID);
         cachedEntity.getFuture().complete(ResponseEntity.ok("Something happened successfully"));
+
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         discordBotService.RegisterListener(new MessageReaction(this));
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 }

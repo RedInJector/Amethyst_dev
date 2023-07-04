@@ -26,7 +26,6 @@ public class GuildJoin extends ListenerAdapter {
             return;
 
         String discordid = event.getUser().getId();
-        System.out.println(discordid);
 
         guildSocketService.sendMessage(discordid);
     }

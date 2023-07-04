@@ -14,18 +14,8 @@ public class MinecraftPlayer {
     @JsonView(Views.Public.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @JsonView(Views.Public.class)
-//    @OneToOne
-//    private User user;
 
     @Column
     @JsonView(Views.Public.class)
     private String playerName;
-    @Column
-    @JsonView(Views.Public.class)
-    private boolean AllowedOnServer;
-
-    @Transient
-    @JsonView(Views.Public.class)
-    private transient String skinUrl;
 }

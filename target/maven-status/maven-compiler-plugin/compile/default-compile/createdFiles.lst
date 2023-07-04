@@ -4,6 +4,7 @@ com\rij\amethyst_dev\MinecraftAuth\MCserverAuthService.class
 com\rij\amethyst_dev\webSockets\PaymentSocket\PaymentSocketService.class
 com\rij\amethyst_dev\jsons\GetUserPOST.class
 com\rij\amethyst_dev\models\Userdb\DiscordUserRepository.class
+com\rij\amethyst_dev\Helpers\StringComparator.class
 com\rij\amethyst_dev\Helpers\RandomStringGenerator.class
 com\rij\amethyst_dev\bot\InternalEventHandlers\HandleRegister.class
 com\rij\amethyst_dev\models\Userdb\User.class
