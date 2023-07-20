@@ -46,7 +46,7 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         Authqueue.put(buttinID, cachedEntity);
         NameCode.put(user.getMinecraftPlayer().getPlayerName(), buttinID);
         CodeName.put(buttinID, user.getMinecraftPlayer().getPlayerName());
-        //CodeSession.put(buttinID, minecraftSession);
+
         executorService.schedule(() -> removeElements(buttinID), 61, TimeUnit.SECONDS);
         /*
         System.out.println("--------------------------------------");
@@ -98,6 +98,11 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
 
     public void ReactToButton(String buttonID){
         CachedEntity cachedEntity = Authqueue.get(buttonID);
+
+        // TODO: STUPID BUGFIX Cannot invoke "com.rij.amethyst_dev.MinecraftAuth.CachedEntity.getMaxTime()" because "cachedEntity" is null
+        if(cachedEntity == null)
+            return;
+
         if(LocalDateTime.now().isAfter(cachedEntity.getMaxTime())){
             Authqueue.remove(buttonID);
             removeElements(buttonID);
@@ -106,7 +111,6 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         saveSession(buttonID);
         removeElements(buttonID);
         cachedEntity.getFuture().complete(ResponseEntity.ok("Something happened successfully"));
-
     }
 
     @Override

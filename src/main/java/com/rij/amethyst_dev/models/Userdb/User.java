@@ -1,6 +1,9 @@
 package com.rij.amethyst_dev.models.Userdb;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
+import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
 import com.rij.amethyst_dev.models.Views;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import jakarta.persistence.*;
@@ -10,7 +13,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -18,6 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Table(name = "user")
 public class User {
 
     @Id
@@ -33,24 +36,26 @@ public class User {
     @OneToOne(cascade = CascadeType.PERSIST)
     private MinecraftPlayer minecraftPlayer;
 
-    @Column
     @JsonView(Views.Private.class)
     private boolean hasPayed = false;
 
-    @Column
     @JsonView(Views.Public.class)
-    private boolean Banned = false;
+    private boolean banned = false;
 
     @JsonView(Views.ServerOnly.class)
     @OneToOne(cascade = CascadeType.ALL)
     private Oauth oauth;
 
     @JsonView(Views.Private.class)
-    private boolean Admin = false;
+    private boolean admin = false;
 
     @JsonView(Views.ServerOnly.class)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccessToken> accessTokens;
+
+    @JsonView(Views.ServerOnly.class)
+    private Integer planUserId;
+
 
 
 
@@ -86,7 +91,21 @@ public class User {
                 accessToken.setUser(null);
             }
         }
+    }
 
+
+    public static User getUserFromDiscordUser(org.redinjector.discord.oAuth2.models.DiscordUser discordUser){
+        User user = new User();
+        DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
+        duser.setDiscordId(discordUser.getId());
+        duser.setDiscordVerified(discordUser.isVerified());
+        duser.setAvatarUrl(discordUser.getAvatar());
+        duser.setEmail(discordUser.getEmail());
+        duser.setPublicUsername(discordUser.getUsername());
+        duser.setDiscriminator(discordUser.getDiscriminator());
+
+        user.setDiscordUser(duser);
+        return new User();
     }
 
 }

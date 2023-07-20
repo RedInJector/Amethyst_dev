@@ -8,7 +8,7 @@ import org.springframework.context.MessageSource;
 
 
 public abstract class Handler<T extends ApplicationEvent> implements ApplicationListener<T> {
-    private final DiscordBot botConfig;
+    public final DiscordBot botConfig;
     protected JDA jda;
     protected MessageSource messageSource;
     public Handler(DiscordBot botConfig) {

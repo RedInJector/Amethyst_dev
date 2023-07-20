@@ -34,3 +34,4 @@ build/
 .vscode/
 !/logs/
 !/src/.env
+/tmp/

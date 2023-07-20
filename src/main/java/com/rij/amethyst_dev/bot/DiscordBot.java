@@ -1,8 +1,6 @@
 package com.rij.amethyst_dev.bot;
 
-import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.GuildJoin;
-import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
 import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketService;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
@@ -23,6 +21,8 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
     private String Token;
     @Value("${discord.mainguildid}")
     private String GuildID;
+    @Value("${discord.emergencycategoryid}")
+    private String emergencycategoryid;
 
     private JDA jda;
 

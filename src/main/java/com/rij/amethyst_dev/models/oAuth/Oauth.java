@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Table(name = "oauth", schema = "project_amethyst_dev2")
 public class Oauth {
 
     @Id

@@ -1,6 +1,10 @@
 package com.rij.amethyst_dev.models.Userdb;
 
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayerRepository;
+import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
+import com.rij.amethyst_dev.models.Userdb.Tokens.AccessTokensRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import org.redinjector.discord.oAuth2.models.DiscordUser;
 import com.rij.amethyst_dev.models.oAuth.oAuth2Repository;
@@ -10,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +27,7 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final MinecraftPlayerRepository minecraftPlayerRepository;
     private final AccessTokensRepository accessTokensRepository;
+    private List<String> autoban = new ArrayList<>();
 
     @Autowired
     public UserService(UserRepository userRepository, oAuth2Repository oAuth2Repository, ApplicationEventPublisher eventPublisher, MinecraftPlayerRepository minecraftPlayerRepository, AccessTokensRepository accessTokensRepository){
@@ -30,6 +36,8 @@ public class UserService {
         this.eventPublisher = eventPublisher;
         this.minecraftPlayerRepository = minecraftPlayerRepository;
         this.accessTokensRepository = accessTokensRepository;
+
+        //autoban.add("");
     }
 
 
@@ -43,7 +51,7 @@ public class UserService {
     }
     public User createUserFromDiscordUser(DiscordUser discordUser){
         User user = new User();
-        com.rij.amethyst_dev.models.Userdb.DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.DiscordUser();
+        com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
         duser.setDiscordId(discordUser.getId());
         duser.setDiscordVerified(discordUser.isVerified());
         duser.setAvatarUrl(discordUser.getAvatar());
@@ -62,6 +70,9 @@ public class UserService {
 
         User existinguser = getUser(user);
         if(existinguser == null){
+            if(autoban.contains(user.getDiscordUser().getDiscordId()))
+                user.setBanned(true);
+
             saveUser(user);
             UserRegisteredEvent event = new UserRegisteredEvent(this, user);
             eventPublisher.publishEvent(event);
@@ -101,36 +112,7 @@ public class UserService {
         user.RemoveAccessToken(accessToken);
         userRepository.save(user);
     }
-    public User getUserWithToken(String token){
-        Oauth oauth = oAuth2Repository.findByAccessToken(token);
-        if (oauth != null) {
-            if(oauth.getExpiresOn().isAfter(LocalDateTime.now()))
-                return oauth.getUser();
 
-            oAuth2Repository.delete(oauth);
-        }
-        return null;
-    }
-    public List<Oauth> getUsersoAuths(User user){
-        return oAuth2Repository.findAllByUser_Id(user.getId());
-    }
-
-    public User getUserByoAuthToken(String Token){
-        User user = userRepository.findByOauthAccessToken(Token);
-        return user;
-
-        /*
-
-        oAuth2 oAuth2 = oAuth2Repository.findByAccessToken(Token);
-        if(oAuth2 != null)
-            return oAuth2.getUser();
-
-        return null;*/
-    }
-    public void deteleToken(String Token){
-        Oauth oauth = oAuth2Repository.findByAccessToken(Token);
-        oAuth2Repository.delete(oauth);
-    }
     public MinecraftPlayer getMinecraftPlayer(String name){
         return minecraftPlayerRepository.findByPlayerName(name);
     }

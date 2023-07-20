@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.rij</groupId>
     <artifactId>Amethyst_dev</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.5-release</version>
     <name>Amethyst_dev</name>
     <description>Amethyst_dev</description>
     <properties>
@@ -74,6 +74,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -88,4 +92,7 @@
         </plugins>
     </build>
 
+
+
 </project>
+
