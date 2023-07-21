@@ -68,7 +68,7 @@ public class DiscordBotService {
             }
 
             if(textChannel != null){
-                return textChannel.sendMessageEmbeds(EmbedGenerator.PaymentGreetengsToGuild(duser.getId()).build()).complete();
+                return textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Прийняти")).complete();
             }
 
             Guild guild = discordBot.getJda().getGuildById(guildid);
