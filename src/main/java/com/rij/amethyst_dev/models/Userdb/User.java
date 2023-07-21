@@ -1,6 +1,8 @@
 package com.rij.amethyst_dev.models.Userdb;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.rij.amethyst_dev.Dev.UserDTOS.Private.PrivateUserDTO;
+import com.rij.amethyst_dev.Dev.UserDTOS.Private.PrivateUserDataDTO;
 import com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
@@ -58,8 +60,6 @@ public class User {
 
 
 
-
-
     public User(){}
 
 
@@ -96,7 +96,7 @@ public class User {
 
     public static User getUserFromDiscordUser(org.redinjector.discord.oAuth2.models.DiscordUser discordUser){
         User user = new User();
-        DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
+        com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
         duser.setDiscordId(discordUser.getId());
         duser.setDiscordVerified(discordUser.isVerified());
         duser.setAvatarUrl(discordUser.getAvatar());
@@ -105,7 +105,18 @@ public class User {
         duser.setDiscriminator(discordUser.getDiscriminator());
 
         user.setDiscordUser(duser);
-        return new User();
+        return user;
+    }
+
+    public PrivateUserDTO getPrivateDTO(){
+        return new PrivateUserDTO(
+                id,
+                getDiscordUser().getDTO(),
+                minecraftPlayer.getPlayerName(),
+                isHasPayed(),
+                isBanned(),
+                isAdmin()
+        );
     }
 
 }

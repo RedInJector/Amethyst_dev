@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev.models.Userdb.Discord;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.rij.amethyst_dev.Dev.UserDTOS.Private.BaseDiscordDTO;
 import com.rij.amethyst_dev.models.Views;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,4 +42,13 @@ public class DiscordUser {
 //   private User user;
 
     public DiscordUser() {}
+
+
+
+    public BaseDiscordDTO getDTO(){
+        return new BaseDiscordDTO(
+                this.discordId,
+                this.publicUsername
+        );
+    }
 }

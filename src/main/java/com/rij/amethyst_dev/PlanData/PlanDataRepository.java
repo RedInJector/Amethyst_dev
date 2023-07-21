@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.DTO.PlayTimeDateDTO;
+import com.rij.amethyst_dev.Dev.UserDTOS.PlayTimeDateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;

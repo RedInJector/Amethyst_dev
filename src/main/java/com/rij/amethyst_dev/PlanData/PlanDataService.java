@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.DTO.PlayTimeDateDTO;
+import com.rij.amethyst_dev.Dev.UserDTOS.PlayTimeDateDTO;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class PlanDataService {
         }
     }
 
-    public List<PlayTimeDateDTO> getMonthPlayTime(User user){
+    public List<PlayTimeDateDTO> getHeatmapTime(User user){
         checkPlanUser(user);
         if(user.getPlanUserId() == null)
             return null;
@@ -64,7 +64,7 @@ public class PlanDataService {
         return Difference;
     }
 
-    public AllPlaytime getAllPlaytime(User user){
+    public AllPlaytime getPlayTime(User user){
         checkPlanUser(user);
         if(user.getPlanUserId() == null)
             return new AllPlaytime("0", "0", "0", "0");

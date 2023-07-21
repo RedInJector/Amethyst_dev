@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -354,26 +353,26 @@ public class APIRoutes {
                 .collect(Collectors.toList())
         );
     }
-
+/*
     @GetMapping("/p/playtime/{name}")
     public ResponseEntity<String> getPlaytime(@PathVariable("name") String name){
         User user = userService.getUserWithMinecraftname(name);
         if(user == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No user");
 
-        List<PlayTimeDateDTO> playtime = planDataService.getMonthPlayTime(user);
+        List<PlayTimeDateDTO> playtime = planDataService.getHeatmapTime(user);
         if(playtime != null)
-            return mapjson.apply(planDataService.getMonthPlayTime(user));
+            return mapjson.apply(planDataService.getHeatmapTime(user));
         return ResponseEntity.ok( "null");
     }
-
+*/
     @GetMapping("/p/allplaytime/{name}")
     public ResponseEntity<String> getAllPlaytime(@PathVariable("name") String name){
         User user = userService.getUserWithMinecraftname(name);
         if(user == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No user");
 
-        return mapjson.apply(planDataService.getAllPlaytime(user));
+        return mapjson.apply(planDataService.getPlayTime(user));
     }
 
 
