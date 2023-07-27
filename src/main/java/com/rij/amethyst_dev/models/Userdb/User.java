@@ -1,8 +1,9 @@
 package com.rij.amethyst_dev.models.Userdb;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.rij.amethyst_dev.Dev.UserDTOS.Private.PrivateUserDTO;
-import com.rij.amethyst_dev.Dev.UserDTOS.Private.PrivateUserDataDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.IUserDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.Private.PrivateUserDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.Public.PublicUserDTO;
 import com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
@@ -26,36 +27,31 @@ import java.util.List;
 public class User {
 
     @Id
-    @JsonView(Views.Public.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonView(Views.Public.class)
     @OneToOne(cascade = CascadeType.PERSIST)
     private DiscordUser discordUser;
 
-    @JsonView(Views.Public.class)
     @OneToOne(cascade = CascadeType.PERSIST)
     private MinecraftPlayer minecraftPlayer;
 
-    @JsonView(Views.Private.class)
     private boolean hasPayed = false;
 
-    @JsonView(Views.Public.class)
     private boolean banned = false;
 
+    private boolean unbannable = true;
+
     @JsonView(Views.ServerOnly.class)
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Oauth oauth;
 
-    @JsonView(Views.Private.class)
     private boolean admin = false;
 
     @JsonView(Views.ServerOnly.class)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AccessToken> accessTokens;
 
-    @JsonView(Views.ServerOnly.class)
     private Integer planUserId;
 
 
@@ -108,15 +104,33 @@ public class User {
         return user;
     }
 
-    public PrivateUserDTO getPrivateDTO(){
-        return new PrivateUserDTO(
-                id,
-                getDiscordUser().getDTO(),
-                minecraftPlayer.getPlayerName(),
-                isHasPayed(),
-                isBanned(),
-                isAdmin()
-        );
+    public IUserDTO toPrivateDTO() {
+        return createDTO(true);
+    }
+
+    public IUserDTO toPublicDTO() {
+        return createDTO(false);
+    }
+
+    private IUserDTO createDTO(boolean isPrivate) {
+        if (isPrivate) {
+            return new PrivateUserDTO(
+                    id,
+                    getDiscordUser().getDTO(),
+                    minecraftPlayer.getPlayerName(),
+                    isHasPayed(),
+                    isBanned(),
+                    isAdmin(),
+                    unbannable
+            );
+        } else {
+            return new PublicUserDTO(
+                    id,
+                    getDiscordUser().getDTO(),
+                    minecraftPlayer.getPlayerName(),
+                    isBanned()
+            );
+        }
     }
 
 }

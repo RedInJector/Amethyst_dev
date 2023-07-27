@@ -1,6 +1,6 @@
 package com.rij.amethyst_dev.Dev.Routes;
 
-import com.rij.amethyst_dev.Dev.Events.DonationEvent;
+import com.rij.amethyst_dev.Dev.Events.PaymentEvent;
 import com.rij.amethyst_dev.Helpers.StringComparator;
 import com.rij.amethyst_dev.Routes.APIRoutes;
 import com.rij.amethyst_dev.jsons.Donation;
@@ -32,21 +32,18 @@ public class PaymentRoute {
 
 
     @PostMapping("/donatellopayment")
-    public ResponseEntity<String> test2(@RequestBody Donation donate, @RequestHeader("X-Key") String header){
-        if(!StringComparator.compareAPIKeys(DONATELLO_API_KEY, header))
+    public ResponseEntity<String> test2(@RequestBody Donation donate, @RequestHeader("X-Key") String header) {
+        if (!StringComparator.compareAPIKeys(DONATELLO_API_KEY, header))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
 
-
         logger.info("Incoming payment: " + donate.toString());
-
         Payment payment = new Payment();
         payment.fromDonate(donate);
+
         paymentService.savePayment(payment);
+        PaymentEvent event = new PaymentEvent(this, donate);
 
-        DonationEvent event = new DonationEvent(this, donate);
         eventPublisher.publishEvent(event);
-
-
         return ResponseEntity.ok("Ok");
     }
 }

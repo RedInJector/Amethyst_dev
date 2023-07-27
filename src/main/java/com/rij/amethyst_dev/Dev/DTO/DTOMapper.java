@@ -1,6 +1,7 @@
-package com.rij.amethyst_dev.Dev.UserDTOS;
+package com.rij.amethyst_dev.Dev.DTO;
 
 
+import com.rij.amethyst_dev.Dev.DTO.User.DiscordRoleDTO;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.function.Function;

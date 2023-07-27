@@ -4,6 +4,7 @@ import com.rij.amethyst_dev.Configuration.oAuthConfig;
 import com.rij.amethyst_dev.Dev.Events.UserRegistered;
 import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
+import com.rij.amethyst_dev.bot.DiscordBotService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
 import jakarta.servlet.http.Cookie;
@@ -11,10 +12,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.redinjector.discord.oAuth2.DiscordOAuth2;
 import org.redinjector.discord.oAuth2.models.DiscordUser;
 import org.redinjector.discord.oAuth2.models.Token;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -30,6 +36,7 @@ public class AuthRoutesV2 {
     private final oAuthConfig oauthConfig;
     private final Authorizator authorizator;
     private final ApplicationEventPublisher eventPublisher;
+    Logger logger = LoggerFactory.getLogger(AuthRoutesV2.class);
 
     @Autowired
     public AuthRoutesV2(UserService userService, oAuthConfig oauthConfig, Authorizator authorizator, ApplicationEventPublisher eventPublisher) {
@@ -95,5 +102,4 @@ public class AuthRoutesV2 {
 
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
-
 }

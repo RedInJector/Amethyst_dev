@@ -1,21 +1,22 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.Dev.UserDTOS.PlayTimeDateDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.PlayTimeDateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Repository
+@EnableScheduling
 public class PlanDataRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -36,17 +37,17 @@ public class PlanDataRepository {
         return res;
     }
 
-    public List<PlayTimeDateDTO> getplaytimeSecByDate(int planPlayerId, LocalDate startdate) {
+
+    public List<PlayTimeDateDTO> getHeatmapData(int planPlayerId) {
 
         String sql = "SELECT FLOOR(SUM((session_end - session_start) / 1000)) AS playtime, DATE(FROM_UNIXTIME(session_start / 1000)) AS date\n" +
                 "FROM plan_sessions\n" +
                 "WHERE user_id = ?\n" +
-                "AND DATE(FROM_UNIXTIME(session_start / 1000)) BETWEEN ? AND ?\n" +
                 "GROUP BY DATE(FROM_UNIXTIME(session_start / 1000))";
 
 
         try {
-            return jdbcTemplate.query(sql, new PlayerRowMapper1(), planPlayerId, startdate, LocalDate.now());
+            return jdbcTemplate.query(sql, new PlayerRowMapper1(), planPlayerId);
         }catch (Exception any){
             return null;
         }
@@ -78,17 +79,30 @@ public class PlanDataRepository {
         }
     }
 
+
     public AllPlaytime getAllPlaytime(int planPlayerid){
-        String sql = "SELECT\n" +
-                "  ROUND(SUM(CASE WHEN session_end >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 DAY) * 1000 THEN (session_end - session_start) / 1000 ELSE 0 END)) AS last_day_seconds,\n" +
-                "  ROUND(SUM(CASE WHEN session_end >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 WEEK) * 1000 THEN (`session_end` - session_start) / 1000 ELSE 0 END)) AS last_week_seconds,\n" +
-                "  ROUND(SUM(CASE WHEN session_end >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 MONTH) * 1000 THEN (session_end - session_start) / 1000 ELSE 0 END)) AS last_month_seconds,\n" +
-                "  ROUND(SUM(CASE WHEN session_end >= 0 THEN (session_end - session_start) / 1000 ELSE 0 END)) AS all_time_seconds\n" +
-                "FROM plan_sessions\n" +
-                "WHERE user_id = ?;";
+        String sql = "SELECT " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_day_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_week_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_month_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS all_time_seconds " +
+                "FROM plan_sessions WHERE user_id = ?";
+
+        long now = System.currentTimeMillis() / 1000;
+        long lastDay = now - 86400;
+        long lastWeek = now - 604800;
+        long lastMonth = now - 2592000;
+
+        Object[] params = {
+                lastDay * 1000, now * 1000, now * 1000,
+                lastWeek * 1000, now * 1000, now * 1000,
+                lastMonth * 1000, now * 1000, now * 1000,
+                now * 1000, now * 1000,
+                planPlayerid
+        };
 
         try {
-            return jdbcTemplate.queryForObject(sql, new PlayerRowMapper2(), planPlayerid);
+            return jdbcTemplate.queryForObject(sql, params, new PlayerRowMapper2());
         }catch (Exception e){
             return new AllPlaytime("0", "0", "0", "0");
         }
@@ -104,4 +118,14 @@ public class PlanDataRepository {
             );
         }
     }
+
+
+
+
+
+
+
+
+
+
 }

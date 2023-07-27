@@ -3,7 +3,6 @@ package com.rij.amethyst_dev.MinecraftAuth;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.bot.DiscordBotService;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
-import com.rij.amethyst_dev.jsons.minecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Message;
 import org.springframework.context.ApplicationListener;
@@ -25,9 +24,6 @@ import java.util.concurrent.TimeUnit;
 public class MCserverAuthService implements ApplicationListener<ContextRefreshedEvent> {
     private final Map<String, CachedEntity> Authqueue = new HashMap<>();
     private final Map<String, String> NameCode = new HashMap<>();
-    private final Map<String, String> CodeName = new HashMap<>();
-    //private final Map<String, MinecraftSession> CodeSession  = new HashMap<>();
-
     private final SessionManager sessionManager = new SessionManager(120);
 
     private final DiscordBotService discordBotService;
@@ -38,31 +34,19 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> future, MinecraftSession minecraftSession){
-        String buttinID = RandomStringGenerator.generate(8);
-        Message message = discordBotService.sendAuthentiticationMessage(user, buttinID);
+    public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> response, MinecraftSession minecraftSession){
+        String buttonID = RandomStringGenerator.generate(8);
+        Message message = discordBotService.sendAuthentiticationMessage(user, buttonID);
 
-        CachedEntity cachedEntity = new CachedEntity(user.getMinecraftPlayer().getPlayerName(), future, message, minecraftSession);
-        Authqueue.put(buttinID, cachedEntity);
-        NameCode.put(user.getMinecraftPlayer().getPlayerName(), buttinID);
-        CodeName.put(buttinID, user.getMinecraftPlayer().getPlayerName());
+        CachedEntity cachedEntity = new CachedEntity(user.getMinecraftPlayer().getPlayerName(), response, message, minecraftSession);
+        Authqueue.put(buttonID, cachedEntity);
+        NameCode.put(user.getMinecraftPlayer().getPlayerName(), buttonID);
 
-        executorService.schedule(() -> removeElements(buttinID), 61, TimeUnit.SECONDS);
-        /*
-        System.out.println("--------------------------------------");
-        for (Map.Entry<String, UnnamedModel> entry : Authqueue.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue().getMinecraftName());
-        }
-        for (Map.Entry<String, String> entry : NameCode.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-        System.out.println("--------------------------------------");
-        */
+        executorService.schedule(() -> removeElements(buttonID), 61, TimeUnit.SECONDS);
     }
     private void removeElements(String buttonID){
-        if(CodeName.containsKey(buttonID)) {
-            String name = CodeName.get(buttonID);
-            CodeName.remove(buttonID);
+        if(Authqueue.containsKey(buttonID)) {
+            String name = Authqueue.get(buttonID).getMinecraftName();
             NameCode.remove(name);
         }
 
@@ -85,13 +69,8 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
 
         removeElements(btncode);
     }
-    private void saveSession(String buttonID){
-        if(!Authqueue.containsKey(buttonID))
-            return;
-
-        CachedEntity entity = Authqueue.get(buttonID);
+    private void saveSession(CachedEntity entity){
         MinecraftSession session = entity.getMinecraftSession();
-
         sessionManager.saveSession(session);
     }
 
@@ -104,11 +83,10 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
             return;
 
         if(LocalDateTime.now().isAfter(cachedEntity.getMaxTime())){
-            Authqueue.remove(buttonID);
             removeElements(buttonID);
             return;
         }
-        saveSession(buttonID);
+        saveSession(cachedEntity);
         removeElements(buttonID);
         cachedEntity.getFuture().complete(ResponseEntity.ok("Something happened successfully"));
     }
@@ -118,7 +96,15 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
         discordBotService.RegisterListener(new MessageReaction(this));
     }
 
+    public boolean isValid(MinecraftSession session){
+        return sessionManager.isValid(session);
+    }
+
+
     public SessionManager getSessionManager() {
         return sessionManager;
     }
+
+
+
 }

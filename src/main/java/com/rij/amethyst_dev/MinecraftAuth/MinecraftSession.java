@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.jsons.minecraftAuth;
+package com.rij.amethyst_dev.MinecraftAuth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

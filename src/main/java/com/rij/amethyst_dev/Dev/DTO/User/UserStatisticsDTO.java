@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.Dev.UserDTOS;
+package com.rij.amethyst_dev.Dev.DTO.User;
 
 import java.util.List;
 

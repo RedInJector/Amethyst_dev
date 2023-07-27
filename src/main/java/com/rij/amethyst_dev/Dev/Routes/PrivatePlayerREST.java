@@ -3,13 +3,8 @@ package com.rij.amethyst_dev.Dev.Routes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rij.amethyst_dev.DTO.AllPlaytime;
 import com.rij.amethyst_dev.Dev.Events.UserAddedMinecraftName;
-import com.rij.amethyst_dev.Dev.UserDTOS.DTOMapper;
-import com.rij.amethyst_dev.Dev.UserDTOS.DiscordRoleDTO;
-import com.rij.amethyst_dev.Dev.UserDTOS.PlayTimeDateDTO;
-import com.rij.amethyst_dev.Dev.UserDTOS.Private.PrivateUserDataDTO;
-import com.rij.amethyst_dev.Dev.UserDTOS.UserStatisticsDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.MinecraftNameValidator;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
@@ -18,15 +13,14 @@ import com.rij.amethyst_dev.jsons.Submitname;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
-import net.dv8tion.jda.api.entities.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/me")
@@ -41,6 +35,7 @@ public class PrivatePlayerREST {
     private final PlanDataService planDataService;
     private final DiscordBotService discordBotService;
     private final ApplicationEventPublisher eventPublisher;
+    Logger logger = LoggerFactory.getLogger(PrivatePlayerREST.class);
 
     public PrivatePlayerREST(Authorizator authorizator, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, ApplicationEventPublisher eventPublisher) {
         this.authorizator = authorizator;
@@ -108,46 +103,32 @@ public class PrivatePlayerREST {
             @RequestParam(value = "type", defaultValue = "base") String type
     ) {
 
-        if(!type.equals("base") && !type.equals("all") && !type.equals("")) return ResponseEntity.badRequest().body("Bad Request");
+        //logger.info("Request: " + token + "   " + type);
 
-        System.out.println(token);
+        if(!type.equals("base") && !type.equals("all") && !type.equals("user-only")) return BAD_REQUEST;
+
         User user = authorizator.authorizedUser(token);
         if(user == null)
             return UNAUTHORIZED;
 
         switch (type) {
             case "", "base" -> {
-                return mapjson.apply(user.getPrivateDTO());
+                return mapjson.apply(new UserDataDTOBuilder()
+                        .addPrivateUserData(user)
+                        .addRoles(discordBotService, user)
+                        .build());
+            }
+            case "user-only" -> {
+                return mapjson.apply(new UserDataDTOBuilder()
+                        .addPrivateUserData(user)
+                        .build());
             }
             case "all" -> {
-                AllPlaytime allPlaytime = planDataService.getPlayTime(user);
-                List<PlayTimeDateDTO> heatmap = planDataService.getHeatmapTime(user);
-                Long lastonline = planDataService.getLastOnline(user);
-
-
-                UserStatisticsDTO userStatisticsDTO = new UserStatisticsDTO(
-                        allPlaytime.allTimeSeconds(),
-                        allPlaytime.lastMonthSeconds(),
-                        allPlaytime.lastWeekSeconds(),
-                        allPlaytime.lastDaySeconds(),
-                        lastonline,
-                        heatmap
-                );
-
-
-                List<DiscordRoleDTO> DTOroles = null;
-
-                List<Role> roles = discordBotService.getGuildRoles(user.getDiscordUser().getDiscordId());
-                if(roles != null)
-                    DTOroles = roles.stream()
-                        .map(DTOMapper.DTOFromRole)
-                        .collect(Collectors.toList());
-
-
-
-                PrivateUserDataDTO res = new PrivateUserDataDTO(user.getPrivateDTO(), userStatisticsDTO, DTOroles);
-
-                return mapjson.apply(res);
+                return mapjson.apply(new UserDataDTOBuilder()
+                        .addPrivateUserData(user)
+                        .addStatisticsData(planDataService, user)
+                        .addRoles(discordBotService, user)
+                        .build());
             }
             default -> {
                 return BAD_REQUEST;
@@ -155,11 +136,5 @@ public class PrivatePlayerREST {
         }
 
     }
-
-
-
-
-
-
 
 }

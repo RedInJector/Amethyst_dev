@@ -1,16 +1,20 @@
 package com.rij.amethyst_dev.models.Userdb;
 
+import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayerRepository;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessTokensRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
-import org.redinjector.discord.oAuth2.models.DiscordUser;
 import com.rij.amethyst_dev.models.oAuth.oAuth2Repository;
 import org.redinjector.discord.oAuth2.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,22 +53,6 @@ public class UserService {
     public User getUser(User user){
         return  userRepository.findByDiscordUserDiscordId(user.getDiscordUser().getDiscordId());
     }
-    public User createUserFromDiscordUser(DiscordUser discordUser){
-        User user = new User();
-        com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
-        duser.setDiscordId(discordUser.getId());
-        duser.setDiscordVerified(discordUser.isVerified());
-        duser.setAvatarUrl(discordUser.getAvatar());
-        duser.setEmail(discordUser.getEmail());
-        duser.setPublicUsername(discordUser.getUsername());
-        duser.setDiscriminator(discordUser.getDiscriminator());
-
-        user.setDiscordUser(duser);
-        //duser.setUser(user);
-
-        return user;
-    }
-
 
     public User saveUserIfNotExists(User user){
 
@@ -118,7 +106,9 @@ public class UserService {
     }
 
     public User getUserWithMinecraftname(String name){
-        return userRepository.findByMinecraftPlayerPlayerName(name);
+        User u = userRepository.findByMinecraftPlayerPlayerName(name);
+
+        return u;
     }
     public Optional<User> getById(int id){
         Optional<User> user = userRepository.findById(id);
@@ -127,6 +117,25 @@ public class UserService {
 
     public List<User> allUsers(){
         return userRepository.findAll();
+    }
+
+    public User getUserByDiscordId(String discordid){
+        return userRepository.findByDiscordUserDiscordId(discordid);
+    }
+
+    public Page<User> getUserPages(int page, int amount){
+        Sort sortByUserId = Sort.by(Sort.Direction.ASC, "id");
+
+
+        Pageable pageable = PageRequest.of(page, amount, sortByUserId);
+        Page<User> u =  userRepository.findUsersWithNonNullMinecraftNameAndHasPayed(pageable);
+
+        return u;
+    }
+
+    public List<User> Search(String name){
+        Pageable maxpage = PageRequest.of(0, 10);
+        return userRepository.findUsersWithMinecraftNameAndHasPayed(name, maxpage);
     }
 
     public void purgeUnusedAccessTokens(){

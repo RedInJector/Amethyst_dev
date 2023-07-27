@@ -4,7 +4,7 @@ import com.rij.amethyst_dev.Helpers.StringComparator;
 import com.rij.amethyst_dev.LibertybansData.LibertybansDataService;
 import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
-import com.rij.amethyst_dev.jsons.minecraftAuth.MinecraftSession;
+import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
 import org.springframework.beans.factory.annotation.Value;

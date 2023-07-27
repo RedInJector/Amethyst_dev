@@ -1,49 +1,7 @@
-2023-07-21T01:48:04.999+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
-2023-07-21T01:48:05.152+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
-2023-07-21T01:48:05.152+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
-2023-07-21T01:48:05.312+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
-2023-07-21T01:48:05.313+02:00  INFO 21016 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-07-21T01:48:05.315+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2023-07-21T01:48:05.473+02:00  INFO 21016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2023-07-21T01:48:08.443+02:00  INFO 19784 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Starting AmethystDevApplication using Java 19.0.2 with PID 19784 (G:\JavaTesting\Amethyst_dev\target\classes started by Max in G:\JavaTesting\Amethyst_dev)
-2023-07-21T01:48:08.444+02:00  INFO 19784 --- [main] c.r.amethyst_dev.AmethystDevApplication  : No active profile set, falling back to 1 default profile: "default"
-2023-07-21T01:48:09.052+02:00  INFO 19784 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-21T01:48:09.100+02:00  INFO 19784 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 44 ms. Found 6 JPA repository interfaces.
-2023-07-21T01:48:09.450+02:00  INFO 19784 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2023-07-21T01:48:09.457+02:00  INFO 19784 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2023-07-21T01:48:09.457+02:00  INFO 19784 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.8]
-2023-07-21T01:48:09.546+02:00  INFO 19784 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2023-07-21T01:48:09.547+02:00  INFO 19784 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1074 ms
-2023-07-21T01:48:09.706+02:00  INFO 19784 --- [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.5.1 by Redgate
-2023-07-21T01:48:09.706+02:00  INFO 19784 --- [main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#9.5.1
-2023-07-21T01:48:09.706+02:00  INFO 19784 --- [main] o.f.c.internal.license.VersionPrinter    : 
-2023-07-21T01:48:09.711+02:00  INFO 19784 --- [main] o.f.c.i.resource.ResourceNameValidator   : 1 SQL migrations were detected but not run because they did not follow the filename convention.
-2023-07-21T01:48:09.711+02:00  INFO 19784 --- [main] o.f.c.i.resource.ResourceNameValidator   : If this is in error, enable debug logging or 'validateMigrationNaming' to fail fast and see a list of the invalid file names.
-2023-07-21T01:48:09.877+02:00  INFO 19784 --- [main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mariadb://ametis.xyz/project_amethyst_dev2 (MariaDB 10.6)
-2023-07-21T01:48:10.592+02:00  INFO 19784 --- [main] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.313s)
-2023-07-21T01:48:11.161+02:00  INFO 19784 --- [main] o.f.core.internal.command.DbMigrate      : Current version of schema `project_amethyst_dev2`: 1.2
-2023-07-21T01:48:11.204+02:00  INFO 19784 --- [main] o.f.core.internal.command.DbMigrate      : Schema `project_amethyst_dev2` is up to date. No migration necessary.
-2023-07-21T01:48:11.436+02:00  INFO 19784 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-21T01:48:11.469+02:00  INFO 19784 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-07-21T01:48:11.657+02:00  INFO 19784 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-07-21T01:48:11.819+02:00  INFO 19784 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@123ca460
-2023-07-21T01:48:11.821+02:00  INFO 19784 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-07-21T01:48:11.876+02:00  INFO 19784 --- [main] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
-2023-07-21T01:48:12.458+02:00  INFO 19784 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-21T01:48:12.464+02:00  INFO 19784 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-21T01:48:12.849+02:00  WARN 19784 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-21T01:48:13.222+02:00  INFO 19784 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
-2023-07-21T01:48:13.298+02:00  INFO 19784 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2023-07-21T01:48:13.879+02:00  INFO 19784 --- [main] net.dv8tion.jda.api.JDA                  : Login Successful!
-2023-07-21T01:48:14.163+02:00  INFO 19784 --- [JDA MainWS-WriteThread] n.d.j.internal.requests.WebSocketClient  : Connected to WebSocket
-2023-07-21T01:48:14.411+02:00  INFO 19784 --- [JDA MainWS-ReadThread] net.dv8tion.jda.api.JDA                  : Finished Loading!
-2023-07-21T01:48:14.421+02:00  INFO 19784 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Started AmethystDevApplication in 6.252 seconds (process running for 6.693)
-2023-07-21T01:48:14.904+02:00  INFO 19784 --- [RMI TCP Connection(1)-26.108.94.108] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-07-21T01:48:14.904+02:00  INFO 19784 --- [RMI TCP Connection(1)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2023-07-21T01:48:14.905+02:00  INFO 19784 --- [RMI TCP Connection(1)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2023-07-21T01:48:14.968+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
-2023-07-21T01:48:15.122+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.mariadb.jdbc.Connection@11d34903
-2023-07-21T01:48:15.123+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
-2023-07-21T01:48:15.154+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
-2023-07-21T01:48:15.308+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.mariadb.jdbc.Connection@26236318
-2023-07-21T01:48:15.309+02:00  INFO 19784 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2023-07-25T11:15:37.768+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2023-07-25T11:15:37.922+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2023-07-25T11:15:37.922+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2023-07-25T11:15:38.082+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2023-07-25T11:15:38.083+02:00  INFO 6320 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-25T11:15:38.088+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-07-25T11:15:38.241+02:00  INFO 6320 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

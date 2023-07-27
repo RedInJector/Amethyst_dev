@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -27,11 +28,11 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
     private JDA jda;
 
     private final MessageSource messageSource;
-    private final GuildSocketService guildSocketService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public DiscordBot(MessageSource messageSource, GuildSocketService guildSocketService) {
+    public DiscordBot(MessageSource messageSource, ApplicationEventPublisher eventPublisher) {
         this.messageSource = messageSource;
-        this.guildSocketService = guildSocketService;
+        this.eventPublisher = eventPublisher;
     }
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -47,7 +48,7 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
             throw new RuntimeException(e);
         }
 
-        jda.addEventListener(new GuildJoin(GuildID, guildSocketService));
+        jda.addEventListener(new GuildJoin(GuildID, eventPublisher));
         //jda.addEventListener(new MessageReaction(jda));
 
         jda.updateCommands().addCommands(

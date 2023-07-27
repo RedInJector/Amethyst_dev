@@ -1,12 +1,11 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.Dev.UserDTOS.PlayTimeDateDTO;
+import com.rij.amethyst_dev.Dev.DTO.User.PlayTimeDateDTO;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -35,9 +34,9 @@ public class PlanDataService {
     public List<PlayTimeDateDTO> getHeatmapTime(User user){
         checkPlanUser(user);
         if(user.getPlanUserId() == null)
-            return null;
+            return new ArrayList<>();
 
-        return planDataRepository.getplaytimeSecByDate(user.getPlanUserId(), LocalDate.of(2023, 7, 1));
+        return planDataRepository.getHeatmapData(user.getPlanUserId());
     }
 
     public long getLastOnline(User user){
@@ -63,6 +62,7 @@ public class PlanDataService {
 
         return Difference;
     }
+
 
     public AllPlaytime getPlayTime(User user){
         checkPlanUser(user);
