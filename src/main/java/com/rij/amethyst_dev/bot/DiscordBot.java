@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
@@ -40,6 +42,8 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
             jda = JDABuilder.createDefault(Token)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     //.addEventListeners(new MyEventListener()) // Add your event listener(s)
+                    .setChunkingFilter(ChunkingFilter.ALL) // enable member chunking for all guilds
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setActivity(Activity.playing("Hello, Discord!")) // Set the bot's activity
                     .build().awaitReady();
 

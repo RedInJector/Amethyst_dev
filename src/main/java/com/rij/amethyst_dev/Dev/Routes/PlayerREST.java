@@ -112,7 +112,7 @@ public class PlayerREST {
                                                 @RequestParam(value = "amount", defaultValue = "10") int amount){
         List<UserDataDTO> userDTOs = new ArrayList<>();
         userService.getUserPages(page, amount).getContent().forEach(user -> {
-            userDTOs.add(new UserDataDTOBuilder().addPublicUserData(user).build());
+            userDTOs.add(new UserDataDTOBuilder().addPublicUserData(user).addRoles(discordBotService, user).build());
         });
 
         return mapjson.apply(userDTOs);
@@ -140,14 +140,14 @@ public class PlayerREST {
         RestTemplate restTemplate = new RestTemplate();
         String mcserverUrl = "http://" + MINECRAFT_SERVER_IP + "/skin/" + name;
 
-        String imageUrl = "https://mc-heads.net/skin/" + name + ".png";
+        String imageUrl = "";
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(mcserverUrl, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 imageUrl = response.getBody();
             }
         } catch (Exception ex) {
-
+            imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         }
 
         Files.createDirectories(Paths.get("tmp/bufferedheads/"));

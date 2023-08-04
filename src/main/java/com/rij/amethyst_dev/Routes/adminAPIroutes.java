@@ -49,7 +49,7 @@ public class adminAPIroutes {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
 
         return mapjson.apply(
-                userService.allUsers()
+                userService.allUsers(0)
                         .stream().map(DTOMapper.PublicDTOFromUser
                 ).collect(Collectors.toList()));
 /*

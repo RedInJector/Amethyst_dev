@@ -1,12 +1,12 @@
 package com.rij.amethyst_dev.bot;
 
+import com.rij.amethyst_dev.Helpers.TimeTester;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -59,8 +59,6 @@ public class DiscordBotService {
 
         textChannel.sendMessageEmbeds(eb.build());
 
-
-
         return textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Прийняти")).complete();
 
     }
@@ -70,11 +68,8 @@ public class DiscordBotService {
         getUsableChannel(discordUser);
     }
 
-    public void addPlayerRole(String discordid){
+    public void givePlayerRole(String discordid){
         JDA jda = discordBot.getJda();
-
-        //User discordUser = jda.retrieveUserById(discordid).complete();
-
 
         Guild guild = jda.getGuildById(discordBot.getGuildID());
 
@@ -86,23 +81,25 @@ public class DiscordBotService {
         discordBot.getJda().addEventListener(listener);
     }
 
-    @Cacheable(value = "discordRolesCache", key = "#discordId")
+    //@Cacheable(value = "discordRolesCache", key = "#discordId")
     public List<Role> getGuildRoles(String discordId){
         Guild guild = discordBot.getJda().getGuildById(discordBot.getGuildID());
 
-        try {
-            Member duser = guild.retrieveMemberById(discordId).complete();
-            List<Role> roles = duser.getRoles();
-            return roles;
-        }catch (Exception e){
-            return null;
-        }
-    }
+        List<Member> members = guild.loadMembers().get();
 
-    @CacheEvict(value = "discordRolesCache", allEntries = true)
-    @Scheduled(fixedRateString = "600000")
-    public void emptyRolesCache() {
-        logger.info("Emptying: discordRolesCache");
+        Member duser = null;
+
+        for(Member m : members){
+            if(!m.getId().equals(discordId))
+                continue;
+
+            duser = m;
+            break;
+        }
+        if(duser == null)
+            return null;
+
+        return duser.getRoles();
     }
 
     private TextChannel getUsableChannel(User duser){
@@ -111,12 +108,10 @@ public class DiscordBotService {
             return (TextChannel) duser.openPrivateChannel().complete();
         }
         catch (Exception any){
-
             String guildid = discordBot.getGuildID();
             String categoryid = discordBot.getEmergencycategoryid();
 
             Member member = discordBot.getJda().getGuildById(guildid).retrieveMemberById(duser.getId()).complete();
-
 
             Category category = discordBot.getJda().getGuildById(guildid).getCategoryById(categoryid);
 

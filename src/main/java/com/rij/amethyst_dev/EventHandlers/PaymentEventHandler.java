@@ -33,7 +33,7 @@ public class PaymentEventHandler implements ApplicationListener<PaymentEvent> {
             case "перепустка на сервер":
                     if(amount.compareTo(new BigDecimal("35.99")) < 0 ) break;
 
-                    ServerPass(event.getDonation().getClientName());
+                    giveServerPass(event.getDonation().getClientName());
                 break;
             case "підтримка сервера":
 
@@ -48,7 +48,7 @@ public class PaymentEventHandler implements ApplicationListener<PaymentEvent> {
 
 
 
-    private void ServerPass(String playerName){
+    private void giveServerPass(String playerName){
         User user = userService.getUserWithMinecraftname(playerName);
 
         if(user.isHasPayed())
@@ -60,7 +60,7 @@ public class PaymentEventHandler implements ApplicationListener<PaymentEvent> {
         String discordid = user.getDiscordUser().getDiscordId();
 
         discordBotService.GreetFirstTime(discordid);
-        discordBotService.addPlayerRole(discordid);
+        discordBotService.givePlayerRole(discordid);
     }
 
     private void Unban(String playerName) {

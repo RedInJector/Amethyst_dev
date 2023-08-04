@@ -115,8 +115,15 @@ public class UserService {
         return user;
     }
 
-    public List<User> allUsers(){
-        return userRepository.findAll();
+    public List<User> allUsers(int page){
+        TimeTester time1 = new TimeTester();
+        time1.start();
+        Pageable pageable = PageRequest.of(page, 10);
+        List<User> a = userRepository.PagablefindAll(pageable);
+        time1.end();
+        return a;
+
+        //return userRepository.findAll();
     }
 
     public User getUserByDiscordId(String discordid){
