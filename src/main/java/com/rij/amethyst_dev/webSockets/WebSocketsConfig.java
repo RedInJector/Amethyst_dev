@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.webSockets;
 
-import com.rij.amethyst_dev.bot.DiscordBotService;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.DiscordBotService;
+import com.rij.amethyst_dev.Services.UserService;
 import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketHandler;
 import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketService;
 import com.rij.amethyst_dev.webSockets.PaymentSocket.PaymentSocketHandler;

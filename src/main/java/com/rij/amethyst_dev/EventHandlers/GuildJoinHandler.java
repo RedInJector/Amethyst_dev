@@ -3,7 +3,7 @@ package com.rij.amethyst_dev.EventHandlers;
 import com.rij.amethyst_dev.Dev.Events.DiscordRelated.GuildJoin;
 import com.rij.amethyst_dev.bot.DiscordBot;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.UserService;
 import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketService;
 import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.beans.factory.annotation.Value;

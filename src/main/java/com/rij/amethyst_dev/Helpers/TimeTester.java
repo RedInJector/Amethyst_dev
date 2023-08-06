@@ -1,10 +1,7 @@
 package com.rij.amethyst_dev.Helpers;
 
-import com.rij.amethyst_dev.bot.DiscordBotService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.LocalDateTime;
 
 public class TimeTester {
     private long startTime;

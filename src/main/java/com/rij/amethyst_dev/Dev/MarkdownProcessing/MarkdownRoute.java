@@ -4,7 +4,7 @@ package com.rij.amethyst_dev.Dev.MarkdownProcessing;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MD;
-import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MDService;
+import com.rij.amethyst_dev.Services.MDService;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.jsons.MDDocument;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/markdown")
@@ -83,7 +85,9 @@ public class MarkdownRoute {
             mdService.save(md);
         }
 
-        return ResponseEntity.ok(Render(md.getRenderedContent()));
+        md.setContent(null);
+
+        return mapjson.apply(md);
     }
 
     @PostMapping("/render")
@@ -157,13 +161,16 @@ public class MarkdownRoute {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<String> findbyString(@RequestParam String param){
+    public ResponseEntity<List<MD>> findbyString(@RequestParam String param){
+        /*
         String s = "";
         for(String s1 : mdService.search(param)){
             s = new StringBuilder(s).append(s1).toString();
-        }
+        }*/
 
-        return ResponseEntity.ok(s);
+        List<MD> res = mdService.search(param).stream().map(md -> {md.setContent(null); return md;}).collect(Collectors.toList());
+
+        return ResponseEntity.ok(res);
     }
 
 

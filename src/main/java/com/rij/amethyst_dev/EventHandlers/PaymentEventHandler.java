@@ -2,9 +2,9 @@ package com.rij.amethyst_dev.EventHandlers;
 
 import com.rij.amethyst_dev.Dev.Events.PaymentEvent;
 import com.rij.amethyst_dev.Dev.Events.UserPardoned;
-import com.rij.amethyst_dev.bot.DiscordBotService;
+import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;

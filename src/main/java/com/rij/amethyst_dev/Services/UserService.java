@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.models.Userdb;
+package com.rij.amethyst_dev.Services;
 
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
@@ -6,6 +6,8 @@ import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayerRepository;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
 import com.rij.amethyst_dev.models.Userdb.Tokens.AccessTokensRepository;
+import com.rij.amethyst_dev.models.Userdb.User;
+import com.rij.amethyst_dev.models.Userdb.UserRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import com.rij.amethyst_dev.models.oAuth.oAuth2Repository;
 import org.redinjector.discord.oAuth2.models.Token;

@@ -32,11 +32,12 @@ public class Payment {
 
     public Payment(){}
 
-    public void fromDonate(Donation donation){
+    public Payment fromDonate(Donation donation){
         this.goal = donation.getGoal();
         this.amount = donation.getAmount();
         this.clientName = donation.getClientName();
         this.message = donation.getMessage();
         this.dateTime = LocalDateTime.now();
+        return this;
     }
 }

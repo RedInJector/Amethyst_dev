@@ -5,7 +5,7 @@ import com.rij.amethyst_dev.Helpers.StringComparator;
 import com.rij.amethyst_dev.Routes.APIRoutes;
 import com.rij.amethyst_dev.jsons.Donation;
 import com.rij.amethyst_dev.models.Payments.Payment;
-import com.rij.amethyst_dev.models.Payments.PaymentService;
+import com.rij.amethyst_dev.Services.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +37,12 @@ public class PaymentRoute {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
 
         logger.info("Incoming payment: " + donate.toString());
-        Payment payment = new Payment();
-        payment.fromDonate(donate);
-
+        Payment payment = new Payment().fromDonate(donate);
         paymentService.savePayment(payment);
-        PaymentEvent event = new PaymentEvent(this, donate);
 
+        PaymentEvent event = new PaymentEvent(this, donate);
         eventPublisher.publishEvent(event);
+
         return ResponseEntity.ok("Ok");
     }
 }

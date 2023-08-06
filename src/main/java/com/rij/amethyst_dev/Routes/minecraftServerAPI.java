@@ -1,12 +1,12 @@
 package com.rij.amethyst_dev.Routes;
 
 import com.rij.amethyst_dev.Helpers.StringComparator;
-import com.rij.amethyst_dev.LibertybansData.LibertybansDataService;
-import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
+import com.rij.amethyst_dev.Services.LibertybansDataService;
+import com.rij.amethyst_dev.Services.MCserverAuthService;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

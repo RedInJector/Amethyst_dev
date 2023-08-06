@@ -3,7 +3,7 @@ package com.rij.amethyst_dev.Routes;
 import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.UserService;
 import com.rij.amethyst_dev.Configuration.oAuthConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

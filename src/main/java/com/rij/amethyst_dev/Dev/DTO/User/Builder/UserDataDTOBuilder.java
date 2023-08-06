@@ -5,7 +5,7 @@ import com.rij.amethyst_dev.DTO.AllPlaytime;
 import com.rij.amethyst_dev.Dev.DTO.*;
 import com.rij.amethyst_dev.Dev.DTO.User.*;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
-import com.rij.amethyst_dev.bot.DiscordBotService;
+import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
 

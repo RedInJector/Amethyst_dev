@@ -1,6 +1,7 @@
-package com.rij.amethyst_dev.bot;
+package com.rij.amethyst_dev.Services;
 
-import com.rij.amethyst_dev.Helpers.TimeTester;
+import com.rij.amethyst_dev.bot.DiscordBot;
+import com.rij.amethyst_dev.bot.EmbedGenerator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -13,10 +14,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

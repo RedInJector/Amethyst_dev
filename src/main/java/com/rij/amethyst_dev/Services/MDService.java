@@ -1,6 +1,8 @@
-package com.rij.amethyst_dev.Dev.MarkdownProcessing.MD;
+package com.rij.amethyst_dev.Services;
 
 
+import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MD;
+import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MDRepository;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
@@ -45,22 +47,20 @@ public class MDService {
     }
 
 
-    public List<String> search(String input) {
+    public List<MD> search(String input) {
         Pageable pageable = PageRequest.of(0, 5);
         List<MD> mds = mdRepository.findOnesThatMension(input, pageable);
 
-        List<String> results = new ArrayList<>();
 
-        System.out.println(mds);
-
+        /*
         mds.forEach(md -> {
             results.addAll(searchMarkdownForString(md.getContent(), input));
         });
-
+*/
         // Use regex to find the target string within the HTML
 
 
-        return results;
+        return mds;
     }
 
     public static List<String> searchMarkdownForString(String markdownContent, String searchString) {

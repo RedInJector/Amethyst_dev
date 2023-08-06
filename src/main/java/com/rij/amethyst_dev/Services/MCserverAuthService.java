@@ -1,7 +1,9 @@
-package com.rij.amethyst_dev.MinecraftAuth;
+package com.rij.amethyst_dev.Services;
 
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
-import com.rij.amethyst_dev.bot.DiscordBotService;
+import com.rij.amethyst_dev.MinecraftAuth.CachedEntity;
+import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
+import com.rij.amethyst_dev.MinecraftAuth.SessionManager;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Message;
