@@ -39,6 +39,7 @@ public class ServerAPI {
     private final PlanDataService planDataService;
     private final LibertybansDataService libertybansDataService;
     private final ApplicationEventPublisher eventPublisher;
+    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     public ServerAPI(UserService userService, MCserverAuthService mCserverAuthService, PlanDataService planDataService, LibertybansDataService libertybansDataService, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
@@ -57,9 +58,6 @@ public class ServerAPI {
             return future;
         }
 
-        //System.out.println("Player joined " + session.getName());
-
-
         User user = userService.getUserWithMinecraftname(session.getName());
         if (user == null){
             future.complete(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong"));
@@ -70,8 +68,6 @@ public class ServerAPI {
             return future;
         }
 
-
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         if(mCserverAuthService.isValid(session)) {
             future.complete(ResponseEntity.ok("Something happened successfully"));

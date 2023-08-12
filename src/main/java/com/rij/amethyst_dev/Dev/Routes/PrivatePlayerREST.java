@@ -113,18 +113,18 @@ public class PrivatePlayerREST {
 
         switch (type) {
             case "", "base" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPrivateUserData(user)
                         .addRoles(discordBotService, user)
                         .build());
             }
             case "user-only" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPrivateUserData(user)
                         .build());
             }
             case "all" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPrivateUserData(user)
                         .addStatisticsData(planDataService, user)
                         .addRoles(discordBotService, user)

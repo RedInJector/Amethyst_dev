@@ -4,6 +4,7 @@ package com.rij.amethyst_dev.Dev.MarkdownProcessing;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MD;
+import com.rij.amethyst_dev.Helpers.HTMLStringProcessors;
 import com.rij.amethyst_dev.Services.MDService;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.jsons.MDDocument;
@@ -49,8 +50,6 @@ public class MarkdownRoute {
 
 
     private String Render(String input) {
-        TimeTester time1 = new TimeTester();
-        time1.start("render");
         MutableDataSet options = new MutableDataSet()
                 .set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), AttributesExtension.create()))
                 .setFrom(ParserEmulationProfile.GITHUB)
@@ -63,7 +62,7 @@ public class MarkdownRoute {
 
         // You can re-use parser and renderer instances
         Node document = parser.parse(input);
-        time1.end();
+
         return renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
     }
 
@@ -105,15 +104,14 @@ public class MarkdownRoute {
     }
 
     @GetMapping("/getSource")
-    public ResponseEntity<String> getSource(@RequestParam String param){
+    public ResponseEntity<Object> getSource(@RequestParam String param){
         MD md = mdService.getByPath(param);
 
         if(md == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(param + " Not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
         }
 
-
-        return mapjson.apply(md);
+        return ResponseEntity.ok(md);
     }
 
     @PostMapping("/edit")
@@ -144,11 +142,22 @@ public class MarkdownRoute {
         if(body.getContent() == null || !hasAtLeastOneNonSpaceCharacter(body.getContent()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
 
+        if(body.getTitle() == null || !hasAtLeastOneNonSpaceCharacter(body.getContent()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
+
+
         if(mdService.getByPath(body.getPath()) != null)
             return ResponseEntity.status(HttpStatus.CONFLICT).body("already exists");
 
+        MD newmd = new MD();
+        newmd.setContent(body.getContent());
+        newmd.setTitle(body.getTitle());
+        newmd.setWiki(body.isWiki());
+        newmd.setImageUrl(body.getImageUrl());
+        newmd.setPath(body.getPath());
 
-        mdService.addDocument(body.getPath(), body.getContent());
+        mdService.save(newmd);
+        //mdService.addDocument(body.getPath(), body.getContent());
 
         return ResponseEntity.ok("ok");
     }
@@ -160,23 +169,32 @@ public class MarkdownRoute {
         return ResponseEntity.ok("ok");
     }
 
-    @GetMapping("/search")
+    @GetMapping("/wiki/search")
     public ResponseEntity<List<MD>> findbyString(@RequestParam String param){
-        /*
-        String s = "";
-        for(String s1 : mdService.search(param)){
-            s = new StringBuilder(s).append(s1).toString();
-        }*/
+        List<MD> res = mdService.searchInWiki(param).stream().map(md -> {
+            if(md.getRenderedContent() == null)
+                md.setRenderedContent(Render(md.getContent()));
 
-        List<MD> res = mdService.search(param).stream().map(md -> {md.setContent(null); return md;}).collect(Collectors.toList());
+            String removedTags = HTMLStringProcessors.removeHtmlTags(md.getRenderedContent());
+            String found = HTMLStringProcessors.extractTextAroundWord(removedTags, param);
+            md.setContent(found);
+            md.setRenderedContent(null);
+            return md;
+        }).collect(Collectors.toList());
 
         return ResponseEntity.ok(res);
     }
 
 
-
-
     public static boolean hasAtLeastOneNonSpaceCharacter(String str) {
         return str != null && !str.trim().isEmpty();
     }
+
+
+    @GetMapping("/wiki/getgroupes")
+    public ResponseEntity<Object> getWikiGroupes(){
+        return ResponseEntity.ok(mdService.getWikiGroupes());
+    }
+
+
 }

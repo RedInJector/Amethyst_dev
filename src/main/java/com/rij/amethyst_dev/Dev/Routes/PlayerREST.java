@@ -70,7 +70,7 @@ public class PlayerREST {
 
 
     @GetMapping("/{name}")
-    @Cacheable(value = "publicuser", key = "#name + '-' + #type")
+    //@Cacheable(value = "publicuser", key = "#name + '-' + #type")
     public ResponseEntity<String> getPublicPlayer(@PathVariable("name") String name, @RequestParam(value = "type", defaultValue = "base") String type){
         if(!type.equals("base") && !type.equals("all") && !type.equals("") && !type.equals("user-only")) return BAD_REQUEST;
 
@@ -81,18 +81,18 @@ public class PlayerREST {
 
         switch (type) {
             case "", "base" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPublicUserData(user)
                         .addRoles(discordBotService, user)
                         .build());
             }
             case "user-only" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPublicUserData(user)
                         .build());
             }
             case "all" -> {
-                return mapjson.apply(new UserDataDTOBuilder()
+                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
                         .addPublicUserData(user)
                         .addStatisticsData(planDataService, user)
                         .addRoles(discordBotService, user)
@@ -107,12 +107,12 @@ public class PlayerREST {
     }
 
     @GetMapping("/all")
-    //@Cacheable(value = "PagableUsers", key = "#page + '-' + #amount")
+    @Cacheable(value = "PagableUsers", key = "#page + '-' + #amount")
     public ResponseEntity<String> getPlayerList(@RequestParam(value = "page", defaultValue = "0") int page,
                                                 @RequestParam(value = "amount", defaultValue = "10") int amount){
         List<UserDataDTO> userDTOs = new ArrayList<>();
         userService.getUserPages(page, amount).getContent().forEach(user -> {
-            userDTOs.add(new UserDataDTOBuilder().addPublicUserData(user).addRoles(discordBotService, user).build());
+            userDTOs.add(new UserDataDTOBuilder(planDataService, discordBotService).addLastTimeOnServer(planDataService, user).addPublicUserData(user).addRoles(discordBotService, user).build());
         });
 
         return mapjson.apply(userDTOs);
@@ -123,7 +123,7 @@ public class PlayerREST {
 
         List<UserDataDTO> userDTOs = new ArrayList<>();
         userService.Search(name).forEach(user -> {
-            userDTOs.add(new UserDataDTOBuilder().addPublicUserData(user).build());
+            userDTOs.add(new UserDataDTOBuilder(planDataService, discordBotService).addLastTimeOnServer(planDataService, user).addPublicUserData(user).build());
         });
 
         if(userDTOs.isEmpty())
@@ -144,8 +144,10 @@ public class PlayerREST {
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(mcserverUrl, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
-                imageUrl = response.getBody();
+                if(response.getBody() != null)
+                    imageUrl = response.getBody();
             }
+            else imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         } catch (Exception ex) {
             imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         }
@@ -154,7 +156,6 @@ public class PlayerREST {
         String outputFilePath = "tmp/bufferedheads/" + name + "_head.png"; // Replace with your desired output file path
 
         try {
-            // Download the image from the URL
             BufferedImage originalImage = ImageIO.read(new URL(imageUrl));
 
             // Crop a 8x8 region from the image
@@ -178,12 +179,35 @@ public class PlayerREST {
 
             return new ResponseEntity<>(imageBytes, HttpStatus.OK);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+        } catch (Exception e) {
+            String steveurl = "https://www.ametis.xyz/files/steve.png";
+            BufferedImage originalImage = ImageIO.read(new URL(steveurl));
+
+            // Crop a 8x8 region from the image
+            BufferedImage croppedImage = originalImage.getSubimage(8, 8, 8, 8);
+
+            // Upscale the cropped image to 100x100 pixels
+            BufferedImage upscaledImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = upscaledImage.createGraphics();
+            graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+            graphics.drawImage(croppedImage, 0, 0, 128, 128, null);
+            graphics.dispose();
+
+            // Save the upscaled image to disk
+            File outputFile = new File(outputFilePath);
+            ImageIO.write(upscaledImage, "png", outputFile);
+
+            // Serve the image as a resource
+            Path outputFilePathPath = Path.of(outputFilePath);
+
+            byte[] imageBytes = Files.readAllBytes(Path.of(outputFilePathPath.toString()));
+
+            return new ResponseEntity<>(imageBytes, HttpStatus.OK);
         }
     }
 
+
+    // TODO WHF??? java.lang.IllegalArgumentException: image == null!
     @GetMapping(value = "/{name}/skin.png",
             produces = MediaType.IMAGE_PNG_VALUE)
     @Cacheable(value = "heads", key = "#name")
@@ -198,8 +222,9 @@ public class PlayerREST {
             if (response.getStatusCode() == HttpStatus.OK) {
                 imageUrl = response.getBody();
             }
+            else imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         } catch (Exception ex) {
-
+            imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         }
 
         try {
@@ -216,8 +241,26 @@ public class PlayerREST {
 
             return new ResponseEntity<>(imageBytes, HttpStatus.OK) ;
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            try {
+                String steveurl = "https://www.ametis.xyz/files/steve.png";
+
+                BufferedImage originalImage = ImageIO.read(new URL(steveurl));
+                Files.createDirectories(Paths.get("tmp/bufferedskins/"));
+                String outputFilePath = "tmp/bufferedskins/" + name + "_skin.png";
+
+                File outputFile = new File(outputFilePath);
+                ImageIO.write(originalImage, "png", outputFile);
+
+                Path outputFilePathPath = Path.of(outputFilePath);
+
+                byte[] imageBytes = Files.readAllBytes(Path.of(outputFilePathPath.toString()));
+
+                return new ResponseEntity<>(imageBytes, HttpStatus.OK);
+            }
+            catch (Exception ignored){
+                return null;
+            }
         }
     }
 

@@ -8,6 +8,10 @@ import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +22,17 @@ public class UserDataDTOBuilder {
     private IUserDTO user = null;
     private UserStatisticsDTO statistics= null;
     private List<DiscordRoleDTO> roles = null;
+    private Long lastonline = null;
+
+
+    private final PlanDataService planDataService;
+    private final DiscordBotService discordBotService;
+
+    public UserDataDTOBuilder(PlanDataService planDataService, DiscordBotService discordBotService) {
+        this.planDataService = planDataService;
+        this.discordBotService = discordBotService;
+    }
+
 
     public UserDataDTOBuilder addPrivateUserData(User user){
         this.user = user.toPrivateDTO();
@@ -49,13 +64,30 @@ public class UserDataDTOBuilder {
         this.roles = (roles != null) ? roles.stream().map(DTOMapper.DTOFromRole).collect(Collectors.toList()) : null;
         return this;
     }
+    public UserDataDTOBuilder addLastTimeOnServer(PlanDataService planDataService,User user){
+
+        RestTemplate restTemplate = new RestTemplate();
+        String mcserverUrl = "http://" + planDataService.MINECRAFT_SERVER_IP + "/isonline/" + user.getMinecraftPlayer().getPlayerName();
+
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(mcserverUrl, String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                this.lastonline = 0L;
+                return this;
+            }
+        } catch (Exception ignored) {}
+
+        this.lastonline = planDataService.getLastOnline(user);
+        return this;
+    }
 
 
     public UserDataDTO build(){
         return new UserDataDTO(
                 user,
                 statistics,
-                roles
+                roles,
+                lastonline
         );
     }
 

@@ -117,7 +117,7 @@ public class User {
             return new PrivateUserDTO(
                     id,
                     getDiscordUser().getDTO(),
-                    minecraftPlayer.getPlayerName(),
+                    minecraftPlayer == null ? null : minecraftPlayer.getPlayerName(),
                     isHasPayed(),
                     isBanned(),
                     isAdmin(),
@@ -127,7 +127,7 @@ public class User {
             return new PublicUserDTO(
                     id,
                     getDiscordUser().getDTO(),
-                    minecraftPlayer.getPlayerName(),
+                    minecraftPlayer == null ? null : minecraftPlayer.getPlayerName(),
                     isBanned()
             );
         }

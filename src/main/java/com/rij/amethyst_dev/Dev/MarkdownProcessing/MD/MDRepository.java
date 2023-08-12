@@ -11,6 +11,9 @@ import java.util.List;
 public interface MDRepository extends JpaRepository<MD, Long> {
     MD findByPath(String path);
 
-    @Query(value = "SELECT * FROM md_storage md WHERE MATCH(md.content) AGAINST(?1)", nativeQuery = true)
-    List<MD> findOnesThatMension(String input, Pageable pageable);
+    @Query(value = "SELECT md FROM md_storage md WHERE md.content LIKE %?1% AND md.isWiki = true")
+    List<MD> findWikisThatMention(String input, Pageable pageable);
+
+    @Query(value = "SELECT md.id, md.imageUrl, md.groupName, md.title, md.orderPosition, md.path, md.isWiki FROM md_storage md WHERE md.isWiki = true")
+    List<Object[]> getWikiGroupes();
 }

@@ -13,5 +13,5 @@ public class MDDocument {
     private String content;
     private String imageUrl;
     private String title;
-
+    private boolean wiki;
 }

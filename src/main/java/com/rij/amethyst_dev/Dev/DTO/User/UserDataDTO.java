@@ -9,6 +9,7 @@ import java.util.List;
 public record UserDataDTO(
     IUserDTO user,
     UserStatisticsDTO statistics,
-    List<DiscordRoleDTO> roles
+    List<DiscordRoleDTO> roles,
+    Long lastOnline
 ) {
 }

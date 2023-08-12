@@ -4,10 +4,12 @@ package com.rij.amethyst_dev.Dev.MarkdownProcessing.MD;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
+@ToString
 @Entity(name = "md_storage")
 public class MD {
 
@@ -25,6 +27,12 @@ public class MD {
     private String renderedContent;
     @Column(name = "image_url")
     private String imageUrl;
+    @Column(name = "is_wiki")
+    private boolean isWiki;
+    @Column(name = "order_position")
+    private Integer orderPosition;
+    @Column(name = "group_name ")
+    private String groupName;
 
     public MD(){}
 }

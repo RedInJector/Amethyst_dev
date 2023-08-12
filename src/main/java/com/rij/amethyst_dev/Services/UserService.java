@@ -29,16 +29,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final oAuth2Repository oAuth2Repository;
     private final ApplicationEventPublisher eventPublisher;
     private final MinecraftPlayerRepository minecraftPlayerRepository;
     private final AccessTokensRepository accessTokensRepository;
     private List<String> autoban = new ArrayList<>();
 
     @Autowired
-    public UserService(UserRepository userRepository, oAuth2Repository oAuth2Repository, ApplicationEventPublisher eventPublisher, MinecraftPlayerRepository minecraftPlayerRepository, AccessTokensRepository accessTokensRepository){
+    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher, MinecraftPlayerRepository minecraftPlayerRepository, AccessTokensRepository accessTokensRepository){
         this.userRepository = userRepository;
-        this.oAuth2Repository = oAuth2Repository;
         this.eventPublisher = eventPublisher;
         this.minecraftPlayerRepository = minecraftPlayerRepository;
         this.accessTokensRepository = accessTokensRepository;
@@ -134,7 +132,6 @@ public class UserService {
 
     public Page<User> getUserPages(int page, int amount){
         Sort sortByUserId = Sort.by(Sort.Direction.ASC, "id");
-
 
         Pageable pageable = PageRequest.of(page, amount, sortByUserId);
         Page<User> u =  userRepository.findUsersWithNonNullMinecraftNameAndHasPayed(pageable);

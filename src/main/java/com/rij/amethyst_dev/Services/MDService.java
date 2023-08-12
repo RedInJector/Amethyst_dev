@@ -47,17 +47,9 @@ public class MDService {
     }
 
 
-    public List<MD> search(String input) {
+    public List<MD> searchInWiki(String input) {
         Pageable pageable = PageRequest.of(0, 5);
-        List<MD> mds = mdRepository.findOnesThatMension(input, pageable);
-
-
-        /*
-        mds.forEach(md -> {
-            results.addAll(searchMarkdownForString(md.getContent(), input));
-        });
-*/
-        // Use regex to find the target string within the HTML
+        List<MD> mds = mdRepository.findWikisThatMention(input, pageable);
 
 
         return mds;
@@ -94,13 +86,34 @@ public class MDService {
         return paragraphsWithSearchString;
     }
 
+    public List<MD> getWikiGroupes(){
+        List<Object[]> wikiGroupes = mdRepository.getWikiGroupes();
+        List<MD> res = new ArrayList<>();
 
-    public void addDocument(String path, String content) {
-        MD md = new MD();
-        md.setContent(content);
-        md.setPath(path);
+        for (Object[] row : wikiGroupes) {
+            Long id = (Long) row[0];
+            String imageUrl = (String) row[1];
+            String groupName = (String) row[2];
+            String title = (String) row[3];
+            Integer orderPosition = (Integer) row[4];
+            String path = (String) row[5];
+            boolean isWiki = (boolean) row[6] ;
 
-        mdRepository.save(md);
+            // Do whatever you need with the extracted values
+            // For example, you can create a new MD object, print them, etc.
+            MD md = new MD();
+            md.setId(id);
+            md.setImageUrl(imageUrl);
+            md.setGroupName(groupName);
+            md.setTitle(title);
+            md.setOrderPosition(orderPosition);
+            md.setPath(path);
+            md.setWiki(isWiki);
+
+            res.add(md);
+        }
+
+        return res;
     }
 
 }

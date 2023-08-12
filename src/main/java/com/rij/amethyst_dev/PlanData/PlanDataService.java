@@ -4,6 +4,7 @@ import com.rij.amethyst_dev.DTO.AllPlaytime;
 import com.rij.amethyst_dev.Dev.DTO.User.PlayTimeDateDTO;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,6 +13,12 @@ import java.util.*;
 public class PlanDataService {
     private final PlanDataRepository planDataRepository;
     private final UserService userService;
+
+    @Value("${minecraft.server.url}")
+    public String MINECRAFT_SERVER_IP;
+    @Value("${minecraft.server.APIKEY}")
+    public String MINECRAFT_SERVER_API_KEY;
+
 
     public PlanDataService(PlanDataRepository planDataRepository, UserService userService) {
         this.planDataRepository = planDataRepository;
