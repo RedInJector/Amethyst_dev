@@ -42,7 +42,7 @@ public class AuthRoutesV2 {
 
     @GetMapping("/redirect")
     public RedirectView oAuth2redirect(@RequestParam(value = "code", defaultValue = "") String code, HttpServletResponse response) {
-        if(code.equals(""))
+        if(code.isEmpty())
             return new RedirectView(oauthConfig.redirecturl);
 
         Token token = DiscordOAuth2.getToken(code);
@@ -68,8 +68,11 @@ public class AuthRoutesV2 {
 
         userService.saveOauth(user, token);
 
-        String accessToken = RandomStringGenerator.generate(64);
+
+        String accessToken = RandomStringGenerator.generateAccessKey();
         userService.saveNewAccessToken(user, accessToken);
+
+        userService.removeExpiredtokens(user);
 
         Cookie cookie = new Cookie("_dt", accessToken);
         cookie.setPath("/");

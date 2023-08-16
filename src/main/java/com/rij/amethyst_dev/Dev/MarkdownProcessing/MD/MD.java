@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -27,12 +29,12 @@ public class MD {
     private String renderedContent;
     @Column(name = "image_url")
     private String imageUrl;
-    @Column(name = "is_wiki")
-    private boolean isWiki;
     @Column(name = "order_position")
     private Integer orderPosition;
     @Column(name = "group_name ")
     private String groupName;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "md")
+    private List<MDTag> tags;
 
     public MD(){}
 }

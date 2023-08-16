@@ -1,13 +1,15 @@
 package com.rij.amethyst_dev.MinecraftAuth;
 
+import lombok.Getter;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
+@Getter
 public class SessionManager {
     private final HashMap<MinecraftSession, Long> sessions = new HashMap<>();
     private final HashMap<String, MinecraftSession> nameSession = new HashMap<>();
     private int maxSessionTime = 120; //minutes
-    public SessionManager(){}
     public SessionManager(int maxSessionTime){
         this.maxSessionTime = maxSessionTime;
     }

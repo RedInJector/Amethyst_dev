@@ -16,6 +16,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -55,7 +56,6 @@ public class User {
     private Integer planUserId;
 
 
-
     public User(){}
 
 
@@ -66,19 +66,25 @@ public class User {
         this.accessTokens.add(accessToken);
         accessToken.setUser(this);
     }
-    public boolean hasValidAccessToken(String token){
-        if(this.accessTokens == null) {
+
+    public boolean isAccessTokenValid(String token) {
+        if (this.accessTokens == null) {
             this.accessTokens = new ArrayList<>();
             return false;
         }
 
-        for (AccessToken item : accessTokens) {
-            if(item.getToken().equals(token) && item.getExpiresOn().isAfter(LocalDateTime.now())) {
+        Iterator<AccessToken> iterator = accessTokens.iterator();
+
+
+        while (iterator.hasNext()) {
+            AccessToken item = iterator.next();
+            if (item.getToken().equals(token) && item.getExpiresOn().isAfter(LocalDateTime.now())) {
                 return true;
             } else if (item.getToken().equals(token)) {
-                accessTokens.remove(item);
+                iterator.remove();
             }
         }
+
         return false;
     }
     public void RemoveAccessToken(String token){

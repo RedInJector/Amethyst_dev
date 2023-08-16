@@ -9,6 +9,7 @@ import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.MinecraftNameValidator;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
+import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
 import com.rij.amethyst_dev.jsons.Submitname;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.User;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.function.Function;
 
 @RestController
@@ -35,14 +37,16 @@ public class PrivatePlayerREST {
     private final PlanDataService planDataService;
     private final DiscordBotService discordBotService;
     private final ApplicationEventPublisher eventPublisher;
+    private final OnlinePlayersStorage onlinePlayersStorage;
     Logger logger = LoggerFactory.getLogger(PrivatePlayerREST.class);
 
-    public PrivatePlayerREST(Authorizator authorizator, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, ApplicationEventPublisher eventPublisher) {
+    public PrivatePlayerREST(Authorizator authorizator, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, ApplicationEventPublisher eventPublisher, OnlinePlayersStorage onlinePlayersStorage) {
         this.authorizator = authorizator;
         this.userService = userService;
         this.planDataService = planDataService;
         this.discordBotService = discordBotService;
         this.eventPublisher = eventPublisher;
+        this.onlinePlayersStorage = onlinePlayersStorage;
     }
 
     private Function<Object, ResponseEntity<String>> mapjson = obj -> {
@@ -97,14 +101,11 @@ public class PrivatePlayerREST {
         return ResponseEntity.status(HttpStatus.OK).body("Ok");
     }
 
-    @GetMapping
+    //@GetMapping
     public ResponseEntity<String> getPrivatePlayer(
             @CookieValue(value = "_dt", defaultValue = "a") String token,
             @RequestParam(value = "type", defaultValue = "base") String type
     ) {
-
-        //logger.info("Request: " + token + "   " + type);
-
         if(!type.equals("base") && !type.equals("all") && !type.equals("user-only")) return BAD_REQUEST;
 
         User user = authorizator.authorizedUser(token);
@@ -113,18 +114,18 @@ public class PrivatePlayerREST {
 
         switch (type) {
             case "", "base" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPrivateUserData(user)
                         .addRoles(discordBotService, user)
                         .build());
             }
             case "user-only" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPrivateUserData(user)
                         .build());
             }
             case "all" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPrivateUserData(user)
                         .addStatisticsData(planDataService, user)
                         .addRoles(discordBotService, user)
@@ -135,6 +136,39 @@ public class PrivatePlayerREST {
             }
         }
 
+    }
+
+
+    @GetMapping()
+    public ResponseEntity<String> TESTgetPrivatePlayer(
+            @CookieValue(value = "_dt", defaultValue = "a") String token,
+            @RequestParam(value = "include", required = true) List<String> includes
+    ) {
+        User user = authorizator.authorizedUser(token);
+        if(user == null)
+            return UNAUTHORIZED;
+
+        UserDataDTOBuilder builder = new UserDataDTOBuilder();
+
+
+        includes.forEach(string -> {
+            switch (string) {
+                case "user":
+                    builder.addPrivateUserData(user);
+                    break;
+                case "stats":
+                    builder.addStatisticsData(planDataService, user);
+                    break;
+                case "roles":
+                    builder.addRoles(discordBotService, user);
+                    break;
+                case "last-online":
+                    builder.addLastTimeOnServer(planDataService, onlinePlayersStorage ,user);
+                    break;
+            }
+        });
+
+        return mapjson.apply(builder.build());
     }
 
 }

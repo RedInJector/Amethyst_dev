@@ -23,13 +23,16 @@ public class DataSourceConfig {
     @Bean(name = "datasource2")
     @ConfigurationProperties("spring.datasource.plan")
     public DataSource dataSource2(){
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder
+                .create()
+                .build();
     }
 
     @Bean(name = "datasource3")
     @ConfigurationProperties("spring.datasource.libertybans")
     public DataSource dataSource3(){
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder
+                .create()
+                .build();
     }
-
 }

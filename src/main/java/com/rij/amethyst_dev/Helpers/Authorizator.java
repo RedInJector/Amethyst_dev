@@ -24,7 +24,7 @@ public class Authorizator {
                 if(user == null)
                     return null;
 
-                if(!user.hasValidAccessToken(accessToken))
+                if(!user.isAccessTokenValid(accessToken))
                     return null;
 
                 return user;
@@ -38,7 +38,7 @@ public class Authorizator {
         if(user == null)
             return null;
 
-        if(!user.hasValidAccessToken(accessToken))
+        if(!user.isAccessTokenValid(accessToken))
             return null;
 
         return user;

@@ -23,8 +23,12 @@ public class HTMLStringProcessors {
         int targetIndex = text.toLowerCase().indexOf(targetWord.toLowerCase());
 
         // If the target word is not found or the total length is less than 80 characters, return the original text
-        if (targetIndex == -1 || text.length() < 80) {
+        if(text.length() < 80)
             return text;
+
+        if (targetIndex == -1) {
+            System.out.println(targetIndex);
+            return null;
         }
 
         // Calculate the start and end indices for the extracted substring
@@ -56,5 +60,10 @@ public class HTMLStringProcessors {
         }
 
         return result.toString();
+    }
+
+
+    public static boolean hasAtLeastOneNonSpaceCharacter(String str) {
+        return str != null && !str.trim().isEmpty();
     }
 }

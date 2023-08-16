@@ -6,6 +6,7 @@ import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.MinecraftAuth.SessionManager;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
 import com.rij.amethyst_dev.models.Userdb.User;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -22,10 +23,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
+@Getter
 @Service
 public class MCserverAuthService implements ApplicationListener<ContextRefreshedEvent> {
     private final Map<String, CachedEntity> Authqueue = new HashMap<>();
     private final Map<String, String> NameCode = new HashMap<>();
+
     private final SessionManager sessionManager = new SessionManager(120);
 
     private final DiscordBotService discordBotService;
@@ -101,12 +104,6 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     public boolean isValid(MinecraftSession session){
         return sessionManager.isValid(session);
     }
-
-
-    public SessionManager getSessionManager() {
-        return sessionManager;
-    }
-
 
 
 }

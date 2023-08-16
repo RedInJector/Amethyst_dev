@@ -8,6 +8,7 @@ import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.Dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
+import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import org.slf4j.Logger;
@@ -46,13 +47,15 @@ public class PlayerREST {
     @Value("${minecraft.server.APIKEY}")
     public String MINECRAFT_SERVER_API_KEY;
     ResponseEntity<String> BAD_REQUEST = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+    private final OnlinePlayersStorage onlinePlayersStorage;
 
     private final UserService userService;
     private final PlanDataService planDataService;
     private final DiscordBotService discordBotService;
     Logger logger = LoggerFactory.getLogger(DiscordBotService.class);
 
-    public PlayerREST(UserService userService, PlanDataService planDataService, DiscordBotService discordBotService) {
+    public PlayerREST(OnlinePlayersStorage onlinePlayersStorage, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService) {
+        this.onlinePlayersStorage = onlinePlayersStorage;
         this.userService = userService;
         this.planDataService = planDataService;
         this.discordBotService = discordBotService;
@@ -81,18 +84,18 @@ public class PlayerREST {
 
         switch (type) {
             case "", "base" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPublicUserData(user)
                         .addRoles(discordBotService, user)
                         .build());
             }
             case "user-only" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPublicUserData(user)
                         .build());
             }
             case "all" -> {
-                return mapjson.apply(new UserDataDTOBuilder(planDataService, discordBotService)
+                return mapjson.apply(new UserDataDTOBuilder()
                         .addPublicUserData(user)
                         .addStatisticsData(planDataService, user)
                         .addRoles(discordBotService, user)
@@ -112,7 +115,12 @@ public class PlayerREST {
                                                 @RequestParam(value = "amount", defaultValue = "10") int amount){
         List<UserDataDTO> userDTOs = new ArrayList<>();
         userService.getUserPages(page, amount).getContent().forEach(user -> {
-            userDTOs.add(new UserDataDTOBuilder(planDataService, discordBotService).addLastTimeOnServer(planDataService, user).addPublicUserData(user).addRoles(discordBotService, user).build());
+            userDTOs.add(
+                    new UserDataDTOBuilder()
+                            .addLastTimeOnServer(planDataService, onlinePlayersStorage, user)
+                            .addPublicUserData(user)
+                            .addRoles(discordBotService, user)
+                            .build());
         });
 
         return mapjson.apply(userDTOs);
@@ -123,7 +131,11 @@ public class PlayerREST {
 
         List<UserDataDTO> userDTOs = new ArrayList<>();
         userService.Search(name).forEach(user -> {
-            userDTOs.add(new UserDataDTOBuilder(planDataService, discordBotService).addLastTimeOnServer(planDataService, user).addPublicUserData(user).build());
+            userDTOs.add(
+                    new UserDataDTOBuilder()
+                            .addLastTimeOnServer(planDataService, onlinePlayersStorage, user)
+                            .addPublicUserData(user)
+                            .build());
         });
 
         if(userDTOs.isEmpty())

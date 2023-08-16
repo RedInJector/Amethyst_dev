@@ -8,6 +8,7 @@ import com.rij.amethyst_dev.Services.LibertybansDataService;
 import com.rij.amethyst_dev.Services.MCserverAuthService;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
+import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,8 @@ public class ServerAPI {
     @Value("${API_KEY}")
     private String APIKEY;
 
+    private final OnlinePlayersStorage onlinePlayersStorage;
+
 
     private final UserService userService;
     private final MCserverAuthService mCserverAuthService;
@@ -41,7 +44,8 @@ public class ServerAPI {
     private final ApplicationEventPublisher eventPublisher;
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    public ServerAPI(UserService userService, MCserverAuthService mCserverAuthService, PlanDataService planDataService, LibertybansDataService libertybansDataService, ApplicationEventPublisher eventPublisher) {
+    public ServerAPI(OnlinePlayersStorage onlinePlayersStorage, UserService userService, MCserverAuthService mCserverAuthService, PlanDataService planDataService, LibertybansDataService libertybansDataService, ApplicationEventPublisher eventPublisher) {
+        this.onlinePlayersStorage = onlinePlayersStorage;
         this.userService = userService;
         this.mCserverAuthService = mCserverAuthService;
         this.planDataService = planDataService;
@@ -68,7 +72,6 @@ public class ServerAPI {
             return future;
         }
 
-
         if(mCserverAuthService.isValid(session)) {
             future.complete(ResponseEntity.ok("Something happened successfully"));
         }else{
@@ -92,7 +95,7 @@ public class ServerAPI {
     }
 
 
-    @PostMapping("/ban")
+    @PostMapping("/set-banned")
     public ResponseEntity<String> banPlayer(@RequestHeader("Key") String apikey, @RequestBody String uuid){
 
         System.out.println(uuid);
@@ -115,7 +118,7 @@ public class ServerAPI {
 
     }
 
-    @PostMapping("/pardon")
+    @PostMapping("/set-pardonned")
     public ResponseEntity<String> pardonPlayer(@RequestHeader("Key") String apikey, @RequestBody String uuid){
 
         if(!StringComparator.compareAPIKeys(APIKEY, apikey))
@@ -134,6 +137,22 @@ public class ServerAPI {
 
         return ResponseEntity.ok("Ok");
     }
+
+
+    @GetMapping("/register/join")
+    public ResponseEntity<Object> testjoin(@RequestHeader("name") String name){
+        onlinePlayersStorage.setOnline(name, true);
+        System.out.println(name + " JOined");
+        return ResponseEntity.ok("Ok");
+    }
+    @GetMapping("/register/quit")
+    public ResponseEntity<Object> testquit(@RequestHeader("name") String name){
+        System.out.println(name + " quited");
+        onlinePlayersStorage.setOnline(name, false);
+        return ResponseEntity.ok("Ok");
+    }
+
+
 
 
 }

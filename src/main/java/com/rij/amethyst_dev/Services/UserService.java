@@ -1,5 +1,8 @@
 package com.rij.amethyst_dev.Services;
 
+import com.rij.amethyst_dev.Dev.DTO.Admin.UserPages;
+import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
+import com.rij.amethyst_dev.Dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
@@ -9,7 +12,6 @@ import com.rij.amethyst_dev.models.Userdb.Tokens.AccessTokensRepository;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.models.Userdb.UserRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
-import com.rij.amethyst_dev.models.oAuth.oAuth2Repository;
 import org.redinjector.discord.oAuth2.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -115,15 +117,18 @@ public class UserService {
         return user;
     }
 
-    public List<User> allUsers(int page){
+    public UserPages getUserPages(int page){
         TimeTester time1 = new TimeTester();
         time1.start();
-        Pageable pageable = PageRequest.of(page, 10);
-        List<User> a = userRepository.PagablefindAll(pageable);
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<User> a = userRepository.findAll(pageable);
         time1.end();
-        return a;
+        List<UserDataDTO> userDTOs = new ArrayList<>();
+        a.getContent().forEach(user1 ->
+                userDTOs.add(new UserDataDTOBuilder().addPrivateUserData(user1).build()));
 
-        //return userRepository.findAll();
+        return new UserPages(userDTOs, a.getNumber(), a.getTotalPages());
+
     }
 
     public User getUserByDiscordId(String discordid){
@@ -158,6 +163,16 @@ public class UserService {
                 iterator.remove();
             }
         }
+    }
+
+    public void removeExpiredtokens(User user){
+        user.getAccessTokens().forEach(accessToken -> {
+            if(accessToken.getExpiresOn().isBefore(LocalDateTime.now())){
+                accessToken.setUser(null);
+            }
+        });
+
+        userRepository.save(user);
     }
 }
 

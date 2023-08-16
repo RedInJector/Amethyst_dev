@@ -39,6 +39,8 @@ public class adminAPIroutes {
                 }
             };
 
+
+    /*
     @GetMapping("/players")
     public ResponseEntity<String> getallplayers(@CookieValue(value = "_dt", defaultValue = "") String cookie){
         User user = authorizator.authorizedUser(cookie);
@@ -52,6 +54,8 @@ public class adminAPIroutes {
                 userService.allUsers(0)
                         .stream().map(DTOMapper.PublicDTOFromUser
                 ).collect(Collectors.toList()));
+
+     */
 /*
         String jsoPrivateView;
 
@@ -62,5 +66,5 @@ public class adminAPIroutes {
         }
 
         return ResponseEntity.ok().body(jsoPrivateView);*/
-    }
+
 }

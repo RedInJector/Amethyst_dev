@@ -6,6 +6,7 @@ import com.rij.amethyst_dev.Dev.DTO.*;
 import com.rij.amethyst_dev.Dev.DTO.User.*;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
+import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
 import org.springframework.http.HttpStatus;
@@ -20,30 +21,22 @@ import java.util.stream.Collectors;
 public class UserDataDTOBuilder {
 
     private IUserDTO user = null;
-    private UserStatisticsDTO statistics= null;
+    private UserStatisticsDTO statistics = null;
     private List<DiscordRoleDTO> roles = null;
     private Long lastonline = null;
 
 
-    private final PlanDataService planDataService;
-    private final DiscordBotService discordBotService;
-
-    public UserDataDTOBuilder(PlanDataService planDataService, DiscordBotService discordBotService) {
-        this.planDataService = planDataService;
-        this.discordBotService = discordBotService;
-    }
-
-
-    public UserDataDTOBuilder addPrivateUserData(User user){
+    public UserDataDTOBuilder addPrivateUserData(User user) {
         this.user = user.toPrivateDTO();
         return this;
     }
-    public UserDataDTOBuilder addPublicUserData(User user){
+
+    public UserDataDTOBuilder addPublicUserData(User user) {
         this.user = user.toPublicDTO();
         return this;
     }
 
-    public UserDataDTOBuilder addStatisticsData(PlanDataService planDataService,  User user){
+    public UserDataDTOBuilder addStatisticsData(PlanDataService planDataService, User user) {
         AllPlaytime allPlaytime = planDataService.getPlayTime(user);
         List<PlayTimeDateDTO> heatmap = planDataService.getHeatmapTime(user);
         Long lastonline = planDataService.getLastOnline(user);
@@ -59,30 +52,24 @@ public class UserDataDTOBuilder {
         return this;
     }
 
-    public UserDataDTOBuilder addRoles(DiscordBotService discordBotService, User user){
+    public UserDataDTOBuilder addRoles(DiscordBotService discordBotService, User user) {
         List<Role> roles = discordBotService.getGuildRoles(user.getDiscordUser().getDiscordId());
         this.roles = (roles != null) ? roles.stream().map(DTOMapper.DTOFromRole).collect(Collectors.toList()) : null;
+
         return this;
     }
-    public UserDataDTOBuilder addLastTimeOnServer(PlanDataService planDataService,User user){
 
-        RestTemplate restTemplate = new RestTemplate();
-        String mcserverUrl = "http://" + planDataService.MINECRAFT_SERVER_IP + "/isonline/" + user.getMinecraftPlayer().getPlayerName();
+    public UserDataDTOBuilder addLastTimeOnServer(PlanDataService planDataService, OnlinePlayersStorage onlinePlayersStorage, User user) {
+        if(onlinePlayersStorage.isOnline(user.getMinecraftPlayer().getPlayerName()))
+            this.lastonline = 0L;
+        else
+            this.lastonline = planDataService.getLastOnline(user);
 
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(mcserverUrl, String.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                this.lastonline = 0L;
-                return this;
-            }
-        } catch (Exception ignored) {}
-
-        this.lastonline = planDataService.getLastOnline(user);
         return this;
     }
 
 
-    public UserDataDTO build(){
+    public UserDataDTO build() {
         return new UserDataDTO(
                 user,
                 statistics,
@@ -90,8 +77,6 @@ public class UserDataDTOBuilder {
                 lastonline
         );
     }
-
-
 
 
 }

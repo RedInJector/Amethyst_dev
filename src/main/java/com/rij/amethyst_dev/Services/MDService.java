@@ -3,6 +3,8 @@ package com.rij.amethyst_dev.Services;
 
 import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MD;
 import com.rij.amethyst_dev.Dev.MarkdownProcessing.MD.MDRepository;
+import com.vladsch.flexmark.ext.attributes.AttributesExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,33 +90,27 @@ public class MDService {
     }
 
     public List<MD> getWikiGroupes(){
-        List<Object[]> wikiGroupes = mdRepository.getWikiGroupes();
-        List<MD> res = new ArrayList<>();
-
-        for (Object[] row : wikiGroupes) {
-            Long id = (Long) row[0];
-            String imageUrl = (String) row[1];
-            String groupName = (String) row[2];
-            String title = (String) row[3];
-            Integer orderPosition = (Integer) row[4];
-            String path = (String) row[5];
-            boolean isWiki = (boolean) row[6] ;
-
-            // Do whatever you need with the extracted values
-            // For example, you can create a new MD object, print them, etc.
-            MD md = new MD();
-            md.setId(id);
-            md.setImageUrl(imageUrl);
-            md.setGroupName(groupName);
-            md.setTitle(title);
-            md.setOrderPosition(orderPosition);
-            md.setPath(path);
-            md.setWiki(isWiki);
-
-            res.add(md);
-        }
+        List<MD> res = mdRepository.getAllByTagsTag("wiki");
 
         return res;
+    }
+
+
+    public String Render(String rewMarkdown) {
+        MutableDataSet options = new MutableDataSet()
+                .set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), AttributesExtension.create()))
+                .setFrom(ParserEmulationProfile.GITHUB)
+                .set(Parser.LISTS_BULLET_ITEM_INTERRUPTS_PARAGRAPH, true)
+                .set(AttributesExtension.ASSIGN_TEXT_ATTRIBUTES, true);
+
+
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+        // You can re-use parser and renderer instances
+        Node document = parser.parse(rewMarkdown);
+
+        return renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
     }
 
 }
