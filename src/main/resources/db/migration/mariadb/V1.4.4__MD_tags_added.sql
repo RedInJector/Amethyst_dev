@@ -8,3 +8,5 @@ CREATE TABLE md_tags
 
 ALTER TABLE md_storage
     DROP COLUMN is_wiki;
+
+

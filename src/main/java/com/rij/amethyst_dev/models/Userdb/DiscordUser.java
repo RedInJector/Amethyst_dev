@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.models.Userdb.Discord;
+package com.rij.amethyst_dev.models.Userdb;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.rij.amethyst_dev.Dev.DTO.User.Private.BaseDiscordDTO;

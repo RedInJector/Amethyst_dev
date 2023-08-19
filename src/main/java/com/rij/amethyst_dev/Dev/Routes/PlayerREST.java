@@ -8,7 +8,7 @@ import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.Dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
-import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
+import com.rij.amethyst_dev.Services.MCServerService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import org.slf4j.Logger;
@@ -47,18 +47,18 @@ public class PlayerREST {
     @Value("${minecraft.server.APIKEY}")
     public String MINECRAFT_SERVER_API_KEY;
     ResponseEntity<String> BAD_REQUEST = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
-    private final OnlinePlayersStorage onlinePlayersStorage;
 
     private final UserService userService;
     private final PlanDataService planDataService;
     private final DiscordBotService discordBotService;
+    private final MCServerService mcServerService;
     Logger logger = LoggerFactory.getLogger(DiscordBotService.class);
 
-    public PlayerREST(OnlinePlayersStorage onlinePlayersStorage, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService) {
-        this.onlinePlayersStorage = onlinePlayersStorage;
+    public PlayerREST(UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, MCServerService mcServerService) {
         this.userService = userService;
         this.planDataService = planDataService;
         this.discordBotService = discordBotService;
+        this.mcServerService = mcServerService;
     }
 
     private Function<Object, ResponseEntity<String>> mapjson = obj -> {
@@ -117,7 +117,7 @@ public class PlayerREST {
         userService.getUserPages(page, amount).getContent().forEach(user -> {
             userDTOs.add(
                     new UserDataDTOBuilder()
-                            .addLastTimeOnServer(planDataService, onlinePlayersStorage, user)
+                            .addLastTimeOnServer(planDataService, mcServerService, user)
                             .addPublicUserData(user)
                             .addRoles(discordBotService, user)
                             .build());
@@ -133,7 +133,7 @@ public class PlayerREST {
         userService.Search(name).forEach(user -> {
             userDTOs.add(
                     new UserDataDTOBuilder()
-                            .addLastTimeOnServer(planDataService, onlinePlayersStorage, user)
+                            .addLastTimeOnServer(planDataService, mcServerService, user)
                             .addPublicUserData(user)
                             .build());
         });
@@ -279,6 +279,8 @@ public class PlayerREST {
 
     @GetMapping(value = "/{name}/isonline")
     public ResponseEntity<String> isOnline(@PathVariable("name") String name){
+
+        /*
         RestTemplate restTemplate = new RestTemplate();
         String mcserverUrl = "http://" + MINECRAFT_SERVER_IP + "/isonline/" + name;
 
@@ -288,11 +290,16 @@ public class PlayerREST {
                 return ResponseEntity.ok("0");
             }
         } catch (Exception ignored) {}
+         */
+
+
 
         User user = userService.getUserWithMinecraftname(name);
         if (user == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something went wrong");
         }
+        if(mcServerService.isOnline(user.getMinecraftPlayer().getPlayerName()))
+            return ResponseEntity.ok().body("0");
 
         return ResponseEntity.ok().body(String.valueOf(planDataService.getLastOnline(user)));
     }

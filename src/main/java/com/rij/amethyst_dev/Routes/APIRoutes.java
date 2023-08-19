@@ -13,7 +13,7 @@ import com.rij.amethyst_dev.jsons.Donation;
 import com.rij.amethyst_dev.jsons.Submitname;
 import com.rij.amethyst_dev.models.Payments.Payment;
 import com.rij.amethyst_dev.Services.PaymentService;
-import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import com.rij.amethyst_dev.webSockets.PaymentSocket.PaymentSocketService;

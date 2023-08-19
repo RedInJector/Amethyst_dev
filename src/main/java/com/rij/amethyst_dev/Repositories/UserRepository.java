@@ -1,4 +1,5 @@
-package com.rij.amethyst_dev.models.Userdb;
+package com.rij.amethyst_dev.Repositories;
+import com.rij.amethyst_dev.models.Userdb.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,13 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    @EntityGraph(attributePaths = { "minecraftPlayer", "discordUser" })
+    @Query("SELECT u FROM User u")
+    Page<User> getAll(Pageable pageable);
+    @EntityGraph(attributePaths = { "minecraftPlayer", "discordUser" })
+    @Query("SELECT u FROM User u WHERE u.minecraftPlayer.playerName LIKE %?1%")
+    List<User> findByMinecraftName(String name);
+
     @EntityGraph(attributePaths = { "minecraftPlayer" })
     User findByDiscordUserDiscordId(String discordId);
     @EntityGraph(attributePaths = { "discordUser" })

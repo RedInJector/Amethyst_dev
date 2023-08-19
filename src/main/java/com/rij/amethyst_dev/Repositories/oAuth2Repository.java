@@ -1,6 +1,7 @@
-package com.rij.amethyst_dev.models.oAuth;
+package com.rij.amethyst_dev.Repositories;
 
 import com.rij.amethyst_dev.models.Userdb.User;
+import com.rij.amethyst_dev.models.oAuth.Oauth;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

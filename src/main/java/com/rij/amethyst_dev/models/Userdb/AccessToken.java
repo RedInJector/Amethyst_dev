@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.models.Userdb.Tokens;
+package com.rij.amethyst_dev.models.Userdb;
 
 import com.rij.amethyst_dev.models.Userdb.User;
 import jakarta.persistence.*;

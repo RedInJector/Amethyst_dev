@@ -4,13 +4,10 @@ package com.rij.amethyst_dev.Dev.Routes;
 import com.rij.amethyst_dev.Dev.Events.UserBanned;
 import com.rij.amethyst_dev.Dev.Events.UserPardoned;
 import com.rij.amethyst_dev.Helpers.StringComparator;
-import com.rij.amethyst_dev.Services.LibertybansDataService;
-import com.rij.amethyst_dev.Services.MCserverAuthService;
+import com.rij.amethyst_dev.Services.*;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
-import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.Services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -26,31 +23,29 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/v2/server")
 public class ServerAPI {
 
-    @Value("${minecraft.server.url}")
-    public String MINECRAFT_SERVER_IP;
-    @Value("${minecraft.server.APIKEY}")
-    public String MINECRAFT_SERVER_API_KEY;
+    //@Value("${minecraft.server.url}")
+    //public String MINECRAFT_SERVER_IP;
+    //@Value("${minecraft.server.APIKEY}")
+    //public String MINECRAFT_SERVER_API_KEY;
 
     @Value("${API_KEY}")
     private String APIKEY;
-
-    private final OnlinePlayersStorage onlinePlayersStorage;
-
 
     private final UserService userService;
     private final MCserverAuthService mCserverAuthService;
     private final PlanDataService planDataService;
     private final LibertybansDataService libertybansDataService;
     private final ApplicationEventPublisher eventPublisher;
+    private final MCServerService mcServerService;
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    public ServerAPI(OnlinePlayersStorage onlinePlayersStorage, UserService userService, MCserverAuthService mCserverAuthService, PlanDataService planDataService, LibertybansDataService libertybansDataService, ApplicationEventPublisher eventPublisher) {
-        this.onlinePlayersStorage = onlinePlayersStorage;
+    public ServerAPI(UserService userService, MCserverAuthService mCserverAuthService, PlanDataService planDataService, LibertybansDataService libertybansDataService, ApplicationEventPublisher eventPublisher, MCServerService mcServerService) {
         this.userService = userService;
         this.mCserverAuthService = mCserverAuthService;
         this.planDataService = planDataService;
         this.libertybansDataService = libertybansDataService;
         this.eventPublisher = eventPublisher;
+        this.mcServerService = mcServerService;
     }
 
     @PostMapping("authorize-player")
@@ -139,19 +134,39 @@ public class ServerAPI {
     }
 
 
-    @GetMapping("/register/join")
-    public ResponseEntity<Object> testjoin(@RequestHeader("name") String name){
-        onlinePlayersStorage.setOnline(name, true);
-        System.out.println(name + " JOined");
-        return ResponseEntity.ok("Ok");
-    }
-    @GetMapping("/register/quit")
-    public ResponseEntity<Object> testquit(@RequestHeader("name") String name){
-        System.out.println(name + " quited");
-        onlinePlayersStorage.setOnline(name, false);
+    @GetMapping("/register-join")
+    public ResponseEntity<Object> Onjoin(@RequestHeader("name") String name,
+                                           @RequestHeader("Authorization") String key){
+        if(!StringComparator.compareAPIKeys(APIKEY, key))
+            return ResponseEntity.badRequest().body("Bad Request");
+
+        mcServerService.setOnline(name, true);
+        System.out.println(name + " Joined");
         return ResponseEntity.ok("Ok");
     }
 
+    @GetMapping("/register-quit")
+    public ResponseEntity<Object> OnQuit(@RequestHeader("name") String name,
+                                           @RequestHeader("Authorization") String key){
+
+        if(!StringComparator.compareAPIKeys(APIKEY, key))
+            return ResponseEntity.badRequest().body("Bad Request");
+
+        System.out.println(name + " left");
+        mcServerService.setOnline(name, false);
+        return ResponseEntity.ok("Ok");
+    }
+
+
+    @GetMapping("/all-quit")
+    public ResponseEntity<Object> OnAllQuit( @RequestHeader("Authorization") String key ){
+        if(!StringComparator.compareAPIKeys(APIKEY, key))
+            return ResponseEntity.badRequest().body("Bad Request");
+
+        System.out.println("All left");
+        mcServerService.removeAllOnline();
+        return ResponseEntity.ok("Ok");
+    }
 
 
 

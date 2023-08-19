@@ -5,12 +5,12 @@ import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.Dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
-import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
-import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayerRepository;
-import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
-import com.rij.amethyst_dev.models.Userdb.Tokens.AccessTokensRepository;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
+import com.rij.amethyst_dev.Repositories.MinecraftPlayerRepository;
+import com.rij.amethyst_dev.models.Userdb.AccessToken;
+import com.rij.amethyst_dev.Repositories.AccessTokensRepository;
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserRepository;
+import com.rij.amethyst_dev.Repositories.UserRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import org.redinjector.discord.oAuth2.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,10 +118,11 @@ public class UserService {
     }
 
     public UserPages getUserPages(int page){
+
+        Pageable pageable = PageRequest.of(page, 20);
         TimeTester time1 = new TimeTester();
         time1.start();
-        Pageable pageable = PageRequest.of(page, 20);
-        Page<User> a = userRepository.findAll(pageable);
+        Page<User> a = userRepository.getAll(pageable);
         time1.end();
         List<UserDataDTO> userDTOs = new ArrayList<>();
         a.getContent().forEach(user1 ->
@@ -129,6 +130,10 @@ public class UserService {
 
         return new UserPages(userDTOs, a.getNumber(), a.getTotalPages());
 
+    }
+
+    public List<User> getLikeName(String name){
+        return userRepository.findByMinecraftName(name);
     }
 
     public User getUserByDiscordId(String discordid){

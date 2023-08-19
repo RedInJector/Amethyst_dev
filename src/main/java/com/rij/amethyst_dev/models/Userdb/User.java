@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.rij.amethyst_dev.Dev.DTO.User.IUserDTO;
 import com.rij.amethyst_dev.Dev.DTO.User.Private.PrivateUserDTO;
 import com.rij.amethyst_dev.Dev.DTO.User.Public.PublicUserDTO;
-import com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser;
-import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
-import com.rij.amethyst_dev.models.Userdb.Tokens.AccessToken;
 import com.rij.amethyst_dev.models.Views;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import jakarta.persistence.*;
@@ -98,7 +95,7 @@ public class User {
 
     public static User getUserFromDiscordUser(org.redinjector.discord.oAuth2.models.DiscordUser discordUser){
         User user = new User();
-        com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser duser = new com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser();
+        DiscordUser duser = new DiscordUser();
         duser.setDiscordId(discordUser.getId());
         duser.setDiscordVerified(discordUser.isVerified());
         duser.setAvatarUrl(discordUser.getAvatar());

@@ -6,13 +6,9 @@ import com.rij.amethyst_dev.Dev.DTO.*;
 import com.rij.amethyst_dev.Dev.DTO.User.*;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
-import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
+import com.rij.amethyst_dev.Services.MCServerService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,8 +55,8 @@ public class UserDataDTOBuilder {
         return this;
     }
 
-    public UserDataDTOBuilder addLastTimeOnServer(PlanDataService planDataService, OnlinePlayersStorage onlinePlayersStorage, User user) {
-        if(onlinePlayersStorage.isOnline(user.getMinecraftPlayer().getPlayerName()))
+    public UserDataDTOBuilder addLastTimeOnServer(PlanDataService planDataService, MCServerService mcServerService, User user) {
+        if(mcServerService.isOnline(user.getMinecraftPlayer().getPlayerName()))
             this.lastonline = 0L;
         else
             this.lastonline = planDataService.getLastOnline(user);

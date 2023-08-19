@@ -9,9 +9,9 @@ import com.rij.amethyst_dev.Helpers.Authorizator;
 import com.rij.amethyst_dev.Helpers.MinecraftNameValidator;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
-import com.rij.amethyst_dev.Services.OnlinePlayersStorage;
+import com.rij.amethyst_dev.Services.MCServerService;
 import com.rij.amethyst_dev.jsons.Submitname;
-import com.rij.amethyst_dev.models.Userdb.MinecraftPlayers.MinecraftPlayer;
+import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import org.slf4j.Logger;
@@ -37,16 +37,16 @@ public class PrivatePlayerREST {
     private final PlanDataService planDataService;
     private final DiscordBotService discordBotService;
     private final ApplicationEventPublisher eventPublisher;
-    private final OnlinePlayersStorage onlinePlayersStorage;
+    private final MCServerService mcServerService;
     Logger logger = LoggerFactory.getLogger(PrivatePlayerREST.class);
 
-    public PrivatePlayerREST(Authorizator authorizator, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, ApplicationEventPublisher eventPublisher, OnlinePlayersStorage onlinePlayersStorage) {
+    public PrivatePlayerREST(Authorizator authorizator, UserService userService, PlanDataService planDataService, DiscordBotService discordBotService, ApplicationEventPublisher eventPublisher, MCServerService mcServerService) {
         this.authorizator = authorizator;
         this.userService = userService;
         this.planDataService = planDataService;
         this.discordBotService = discordBotService;
         this.eventPublisher = eventPublisher;
-        this.onlinePlayersStorage = onlinePlayersStorage;
+        this.mcServerService = mcServerService;
     }
 
     private Function<Object, ResponseEntity<String>> mapjson = obj -> {
@@ -163,7 +163,7 @@ public class PrivatePlayerREST {
                     builder.addRoles(discordBotService, user);
                     break;
                 case "last-online":
-                    builder.addLastTimeOnServer(planDataService, onlinePlayersStorage ,user);
+                    builder.addLastTimeOnServer(planDataService, mcServerService ,user);
                     break;
             }
         });

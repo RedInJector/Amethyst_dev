@@ -2,7 +2,7 @@ package com.rij.amethyst_dev.DTO;
 
 import com.rij.amethyst_dev.DTO.publicUser.DiscordDTO;
 import com.rij.amethyst_dev.DTO.publicUser.UserDTO;
-import com.rij.amethyst_dev.models.Userdb.Discord.DiscordUser;
+import com.rij.amethyst_dev.models.Userdb.DiscordUser;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
 
