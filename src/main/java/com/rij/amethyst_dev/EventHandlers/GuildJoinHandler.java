@@ -1,6 +1,6 @@
 package com.rij.amethyst_dev.EventHandlers;
 
-import com.rij.amethyst_dev.Dev.Events.DiscordRelated.GuildJoin;
+import com.rij.amethyst_dev.events.DiscordRelated.GuildJoin;
 import com.rij.amethyst_dev.bot.DiscordBot;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;

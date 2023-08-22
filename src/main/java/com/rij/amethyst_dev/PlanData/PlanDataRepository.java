@@ -1,11 +1,14 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.Dev.DTO.User.PlayTimeDateDTO;
+import com.rij.amethyst_dev.DTO.User.PlayTimeDateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Repository;
 
@@ -118,14 +121,6 @@ public class PlanDataRepository {
             );
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

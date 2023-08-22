@@ -1,8 +1,8 @@
 package com.rij.amethyst_dev.Services;
 
-import com.rij.amethyst_dev.Dev.DTO.Admin.UserPages;
-import com.rij.amethyst_dev.Dev.DTO.User.Builder.UserDataDTOBuilder;
-import com.rij.amethyst_dev.Dev.DTO.User.UserDataDTO;
+import com.rij.amethyst_dev.DTO.Admin.UserPages;
+import com.rij.amethyst_dev.DTO.User.Builder.UserDataDTOBuilder;
+import com.rij.amethyst_dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
@@ -42,8 +42,6 @@ public class UserService {
         this.eventPublisher = eventPublisher;
         this.minecraftPlayerRepository = minecraftPlayerRepository;
         this.accessTokensRepository = accessTokensRepository;
-
-        //autoban.add("");
     }
 
 
@@ -120,10 +118,7 @@ public class UserService {
     public UserPages getUserPages(int page){
 
         Pageable pageable = PageRequest.of(page, 20);
-        TimeTester time1 = new TimeTester();
-        time1.start();
         Page<User> a = userRepository.getAll(pageable);
-        time1.end();
         List<UserDataDTO> userDTOs = new ArrayList<>();
         a.getContent().forEach(user1 ->
                 userDTOs.add(new UserDataDTOBuilder().addPrivateUserData(user1).build()));

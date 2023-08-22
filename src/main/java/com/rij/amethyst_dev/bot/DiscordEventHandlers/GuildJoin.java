@@ -1,7 +1,6 @@
 package com.rij.amethyst_dev.bot.DiscordEventHandlers;
 
 
-import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketService;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,7 +23,7 @@ public class GuildJoin extends ListenerAdapter {
             return;
 
 
-        eventPublisher.publishEvent(new com.rij.amethyst_dev.Dev.Events.DiscordRelated.GuildJoin(this, event));
+        eventPublisher.publishEvent(new com.rij.amethyst_dev.events.DiscordRelated.GuildJoin(this, event));
 
 
         /*

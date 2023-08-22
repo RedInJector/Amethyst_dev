@@ -14,24 +14,8 @@ public class Authorizator {
         this.userService = userService;
     }
 
-
-    public Function<String, User> authorize =
-            accessToken -> {
-                if(accessToken.equals(""))
-                    return null;
-
-                User user = userService.getUserByAccessToken(accessToken);
-                if(user == null)
-                    return null;
-
-                if(!user.isAccessTokenValid(accessToken))
-                    return null;
-
-                return user;
-            };
-
     public User authorizedUser(String accessToken){
-        if(accessToken.equals(""))
+        if(accessToken.isEmpty())
             return null;
 
         User user = userService.getUserByAccessToken(accessToken);

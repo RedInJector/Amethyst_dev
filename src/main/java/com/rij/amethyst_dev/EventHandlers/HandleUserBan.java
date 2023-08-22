@@ -1,6 +1,6 @@
 package com.rij.amethyst_dev.EventHandlers;
 
-import com.rij.amethyst_dev.Dev.Events.UserBanned;
+import com.rij.amethyst_dev.events.UserBanned;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

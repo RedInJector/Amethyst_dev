@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.EventHandlers;
 
-import com.rij.amethyst_dev.Dev.Events.PaymentEvent;
-import com.rij.amethyst_dev.Dev.Events.UserPardoned;
+import com.rij.amethyst_dev.events.PaymentEvent;
+import com.rij.amethyst_dev.events.UserPardoned;
 import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
@@ -43,7 +43,6 @@ public class PaymentEventHandler implements ApplicationListener<PaymentEvent> {
                 Unban(event.getDonation().getClientName());
                 break;
         }
-
     }
 
 

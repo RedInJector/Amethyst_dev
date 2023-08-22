@@ -1,9 +1,9 @@
 package com.rij.amethyst_dev.models.Userdb;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.rij.amethyst_dev.Dev.DTO.User.IUserDTO;
-import com.rij.amethyst_dev.Dev.DTO.User.Private.PrivateUserDTO;
-import com.rij.amethyst_dev.Dev.DTO.User.Public.PublicUserDTO;
+import com.rij.amethyst_dev.DTO.User.IUserDTO;
+import com.rij.amethyst_dev.DTO.User.Private.PrivateUserDTO;
+import com.rij.amethyst_dev.DTO.User.Public.PublicUserDTO;
 import com.rij.amethyst_dev.models.Views;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import jakarta.persistence.*;

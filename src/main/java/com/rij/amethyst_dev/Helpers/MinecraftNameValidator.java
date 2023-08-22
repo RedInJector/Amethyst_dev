@@ -14,5 +14,7 @@ public class MinecraftNameValidator {
         // Check for non-alphabetic characters or spaces
         String pattern = "^[A-Za-z0-9_]+$";
         return input.matches(pattern);
+
+
     }
 }

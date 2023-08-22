@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
-import com.rij.amethyst_dev.Dev.DTO.User.PlayTimeDateDTO;
+import com.rij.amethyst_dev.DTO.User.PlayTimeDateDTO;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
 import org.springframework.beans.factory.annotation.Value;
