@@ -27,7 +27,6 @@ public class HTMLStringProcessors {
             return text;
 
         if (targetIndex == -1) {
-            System.out.println(targetIndex);
             return null;
         }
 

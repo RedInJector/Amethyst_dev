@@ -47,13 +47,12 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
                     .setActivity(Activity.playing("Hello, Discord!")) // Set the bot's activity
                     .build().awaitReady();
 
-            System.out.println("Discord Bot Started");
+            System.out.println("Discord Bot (" + jda.getSelfUser().getName() +") Started");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         jda.addEventListener(new GuildJoin(GuildID, eventPublisher));
-        //jda.addEventListener(new MessageReaction(jda));
 
         jda.updateCommands().addCommands(
                 Commands.slash("hello", "a")

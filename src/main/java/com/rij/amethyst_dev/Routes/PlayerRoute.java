@@ -5,6 +5,8 @@ package com.rij.amethyst_dev.Routes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rij.amethyst_dev.Configuration.URLS;
+import com.rij.amethyst_dev.DTO.AllPlaytime;
+import com.rij.amethyst_dev.DTO.AllPlaytime2;
 import com.rij.amethyst_dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
@@ -111,7 +113,7 @@ public class PlayerRoute {
     }
 
     @GetMapping("/all")
-    @Cacheable(value = "PagableUsers", key = "#page + '-' + #amount")
+    //@Cacheable(value = "PagableUsers", key = "#page + '-' + #amount")
     public ResponseEntity<String> getPlayerList(@RequestParam(value = "page", defaultValue = "0") int page,
                                                 @RequestParam(value = "amount", defaultValue = "10") int amount){
         List<UserDataDTO> userDTOs = new ArrayList<>();
@@ -126,27 +128,6 @@ public class PlayerRoute {
 
         return mapjson.apply(userDTOs);
     }
-
-
-    @GetMapping("/testall")
-    public ResponseEntity<String> getTestPlayerList(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                @RequestParam(value = "amount", defaultValue = "10") int amount){
-        List<UserDataDTO> userDTOs = new ArrayList<>();
-
-        userService.getUserPages(page, amount).getContent().forEach(user -> {
-            userDTOs.add(
-                    new UserDataDTOBuilder()
-                            .addLastTimeOnServer(planDataService, mcServerService, user)
-                            .addPublicUserData(user)
-                            .addRoles(discordBotService, user)
-                            .build());
-        });
-
-
-
-        return mapjson.apply(userDTOs);
-    }
-
 
 
 

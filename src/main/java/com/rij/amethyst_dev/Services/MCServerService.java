@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev.Services;
 
 import com.rij.amethyst_dev.Configuration.URLS;
+import com.rij.amethyst_dev.DTO.PostCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,12 @@ public class MCServerService {
     public String MINECRAFT_SERVER_API_KEY;
     Logger logger = LoggerFactory.getLogger(MCServerService.class);
 
+    private final RetryMCServerCallService retryMCServerCallService;
+
     private Set<String> onlinePlayers = new HashSet<>();
 
-    public MCServerService(){
+    public MCServerService(RetryMCServerCallService retryMCServerCallService){
+        this.retryMCServerCallService = retryMCServerCallService;
         URLS.setServerIPPort(MINECRAFT_SERVER_IP);
     }
 
@@ -56,43 +60,39 @@ public class MCServerService {
         String requestBody = "";
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity( URLS.WhitelistAdd, requestEntity, String.class);
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(URLS.WhitelistAdd, requestEntity, String.class);
+        }catch (Exception any){
+            retryMCServerCallService.add(new PostCall(URLS.LibertyBansUnBan, requestEntity));
+        }
     }
 
-    public void permaBan(String name, String reason){
+
+    // TODO: remake to POST
+    public boolean ban(String name, String reason, String time){
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", MINECRAFT_SERVER_API_KEY);
         headers.add("name", name);
         headers.add("reason", reason);
-        headers.add("time", "0");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-
-        ResponseEntity<String> response = restTemplate.getForEntity(URLS.LibertyBansBan, String.class, headers);
-
-        System.out.println("Response: " + response);
-    }
-
-    public void ban(String name, String reason){
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", MINECRAFT_SERVER_API_KEY);
-        headers.add("name", name);
-        headers.add("reason", reason);
-        headers.add("time", "0");
+        headers.add("time", time);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(URLS.LibertyBansBan, HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> response;
+        try {
+            response = restTemplate.exchange(URLS.LibertyBansBan, HttpMethod.GET, requestEntity, String.class);
+            if(response.getStatusCode().is2xxSuccessful())
+                logger.info(name + " Was successfully Banned");
 
-        if(response.getStatusCode().is2xxSuccessful())
-            logger.info(name + " Was successfully Banned");
+            System.out.println("Response: " + response.getBody());
+        } catch (Exception any){
+            return false;
+        }
 
-        System.out.println("Response: " + response.getBody());
+        return true;
     }
 
     public void unban(String name){
@@ -105,12 +105,16 @@ public class MCServerService {
 
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 
+        try {
         ResponseEntity<String> response = restTemplate.exchange(URLS.LibertyBansUnBan, HttpMethod.GET, requestEntity, String.class);
 
         if(response.getStatusCode().is2xxSuccessful())
             logger.info(name + " Was successfully unBanned");
-
         System.out.println("Response: " + response);
+        } catch (Exception any){
+
+        }
+
     }
 
 

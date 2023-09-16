@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.Configuration;
 
 public class URLS {
-    private static String ServerIPPort = "";
+    private static String ServerIPPort = "asd";
     public static void setServerIPPort(String serverIPPort){
         ServerIPPort = serverIPPort;
     }

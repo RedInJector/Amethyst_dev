@@ -2,6 +2,7 @@ package com.rij.amethyst_dev.DTO.User;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.rij.amethyst_dev.models.Userdb.User;
 
 import java.util.List;
 
@@ -13,3 +14,4 @@ public record UserDataDTO(
     Long lastOnline
 ) {
 }
+

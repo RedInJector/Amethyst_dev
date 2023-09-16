@@ -12,7 +12,6 @@ public abstract class Handler<T extends ApplicationEvent> implements Application
     protected JDA jda;
     protected MessageSource messageSource;
     public Handler(DiscordBot botConfig) {
-        System.out.println("set jda2");
         this.botConfig = botConfig;
     }
 

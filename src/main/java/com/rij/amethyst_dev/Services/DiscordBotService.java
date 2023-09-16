@@ -55,10 +55,12 @@ public class DiscordBotService {
 
         TextChannel textChannel = getUsableChannel(duser);
 
-        textChannel.sendMessageEmbeds(eb.build());
 
-        return textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Прийняти")).complete();
 
+        var a = textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Accept")).complete();
+        System.out.println(a.getMessageReference().getChannelId());
+
+        return a;
     }
 
     public void GreetFirstTime(String discordid){

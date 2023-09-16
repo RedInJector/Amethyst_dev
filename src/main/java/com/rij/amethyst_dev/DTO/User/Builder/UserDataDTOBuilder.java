@@ -2,6 +2,7 @@ package com.rij.amethyst_dev.DTO.User.Builder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.rij.amethyst_dev.DTO.AllPlaytime;
+import com.rij.amethyst_dev.DTO.AllPlaytime2;
 import com.rij.amethyst_dev.DTO.DTOMapper;
 import com.rij.amethyst_dev.DTO.User.*;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
@@ -10,6 +11,7 @@ import com.rij.amethyst_dev.Services.MCServerService;
 import com.rij.amethyst_dev.models.Userdb.User;
 import net.dv8tion.jda.api.entities.Role;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +65,6 @@ public class UserDataDTOBuilder {
 
         return this;
     }
-
 
     public UserDataDTO build() {
         return new UserDataDTO(

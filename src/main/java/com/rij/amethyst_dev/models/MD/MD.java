@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.MarkdownProcessing.MD;
+package com.rij.amethyst_dev.models.MD;
 
 
 import jakarta.persistence.*;

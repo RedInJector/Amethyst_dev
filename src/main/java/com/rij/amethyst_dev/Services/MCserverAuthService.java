@@ -4,10 +4,13 @@ import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.MinecraftAuth.CachedEntity;
 import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.MinecraftAuth.SessionManager;
+import com.rij.amethyst_dev.Routes.AuthRoute;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
 import com.rij.amethyst_dev.models.Userdb.User;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,8 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     private final DiscordBotService discordBotService;
     private final ScheduledExecutorService executorService;
 
+
+    Logger logger = LoggerFactory.getLogger(MCserverAuthService.class);
     public MCserverAuthService(DiscordBotService discordBotService) {
         this.discordBotService = discordBotService;
         executorService = Executors.newSingleThreadScheduledExecutor();
@@ -41,6 +46,7 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
 
     public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> response, MinecraftSession minecraftSession){
         String buttonID = RandomStringGenerator.generate(8);
+
         Message message = discordBotService.sendAuthentiticationMessage(user, buttonID);
 
         CachedEntity cachedEntity = new CachedEntity(user.getMinecraftPlayer().getPlayerName(), response, message, minecraftSession);

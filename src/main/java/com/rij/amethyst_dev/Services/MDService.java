@@ -1,8 +1,8 @@
 package com.rij.amethyst_dev.Services;
 
 
-import com.rij.amethyst_dev.MarkdownProcessing.MD.MD;
-import com.rij.amethyst_dev.MarkdownProcessing.MD.MDRepository;
+import com.rij.amethyst_dev.models.MD.MD;
+import com.rij.amethyst_dev.models.MD.MDRepository;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;

@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
+import com.rij.amethyst_dev.DTO.AllPlaytime2;
 import com.rij.amethyst_dev.DTO.User.PlayTimeDateDTO;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
@@ -77,5 +78,24 @@ public class PlanDataService {
             return new AllPlaytime("0", "0", "0", "0");
 
        return planDataRepository.getAllPlaytime(user.getPlanUserId());
+    }
+
+
+
+    public List<AllPlaytime2> getAllPlaytimeForusers(List<User> users){
+        List<Integer> userids = new ArrayList<>(users.size());
+        users.forEach(user -> {
+            checkPlanUser(user);
+            userids.add(user.getPlanUserId());
+        });
+        List<AllPlaytime2> allPlaytime = planDataRepository.getAllPlaytimeForUsers(userids);
+
+        List<AllPlaytime2> result = new ArrayList<>(allPlaytime.size());
+        for(int i = 0; i < allPlaytime.size(); i++){
+            result.add(allPlaytime.get(i).planuserid(), allPlaytime.get(i));
+        }
+
+
+        return result;
     }
 }

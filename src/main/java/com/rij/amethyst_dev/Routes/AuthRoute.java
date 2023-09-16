@@ -2,7 +2,7 @@ package com.rij.amethyst_dev.Routes;
 
 import com.rij.amethyst_dev.Configuration.oAuthConfig;
 import com.rij.amethyst_dev.events.UserRegistered;
-import com.rij.amethyst_dev.Helpers.Authorizator;
+import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;

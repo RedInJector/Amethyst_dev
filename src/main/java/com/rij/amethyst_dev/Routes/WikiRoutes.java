@@ -1,9 +1,7 @@
 package com.rij.amethyst_dev.Routes;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rij.amethyst_dev.MarkdownProcessing.MD.MD;
+import com.rij.amethyst_dev.models.MD.MD;
 import com.rij.amethyst_dev.Helpers.HTMLStringProcessors;
 import com.rij.amethyst_dev.Services.MDService;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,17 +26,6 @@ public class WikiRoutes {
     public WikiRoutes(MDService mdService) {
         this.mdService = mdService;
     }
-
-    private final Function<Object, ResponseEntity<String>> mapjson = obj -> {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return ResponseEntity.ok().body(objectMapper.writeValueAsString(obj));
-        } catch (JsonProcessingException e) {
-            //TODO: logger.error(String.valueOf(e));
-            return ResponseEntity.internalServerError().body("Internal Error");
-        }
-    };
-
 
     private String Render(String input) {
         MutableDataSet options = new MutableDataSet()

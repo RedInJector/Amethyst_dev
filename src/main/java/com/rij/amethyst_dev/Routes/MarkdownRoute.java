@@ -3,8 +3,9 @@ package com.rij.amethyst_dev.Routes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rij.amethyst_dev.MarkdownProcessing.MD.MD;
-import com.rij.amethyst_dev.Helpers.Authorizator;
+import com.rij.amethyst_dev.Enums.UserRoles;
+import com.rij.amethyst_dev.models.MD.MD;
+import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Helpers.HTMLStringProcessors;
 import com.rij.amethyst_dev.Services.MDService;
 import com.rij.amethyst_dev.jsons.MDDocument;
@@ -24,6 +25,9 @@ public class MarkdownRoute {
     private final MDService mdService;
     private final Authorizator authorizator;
 
+
+    
+
     public MarkdownRoute(MDService mdService, Authorizator authorizator) {
         this.mdService = mdService;
         this.authorizator = authorizator;
@@ -41,7 +45,7 @@ public class MarkdownRoute {
 
 
     @GetMapping("/get/**")
-    public ResponseEntity<String> GetParsedMd(HttpServletRequest request) {
+    public ResponseEntity<Object> GetParsedMd(HttpServletRequest request) {
         String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String dynamicPath = path.substring("/api/v2/markdown/get/".length());
 
@@ -58,7 +62,7 @@ public class MarkdownRoute {
 
         md.setContent(null);
 
-        return mapjson.apply(md);
+        return ResponseEntity.ok(md);
     }
 
     @PostMapping("/render")
@@ -86,64 +90,58 @@ public class MarkdownRoute {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<String> EditSource(@CookieValue(value = "_dt", defaultValue = "") String token, @RequestBody MDDocument doc) {
-        User user = authorizator.authorizedUser(token);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
+    public ResponseEntity<Object> EditSource(@CookieValue(value = "_dt", defaultValue = "") String token, @RequestBody MDDocument doc) {
+        return authorizator.RoleBased(token, UserRoles.MODERATOR, user -> {
+            MD md = mdService.getByPath(doc.getPath());
 
-        MD md = mdService.getByPath(doc.getPath());
+            if (md == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(doc.getContent() + " Not found");
+            }
 
-        if (md == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(doc.getContent() + " Not found");
-        }
-
-        md.setContent(doc.getContent());
-        md.setRenderedContent(mdService.Render(doc.getContent()));
-        mdService.save(md);
-        return mapjson.apply(md);
+            md.setContent(doc.getContent());
+            md.setRenderedContent(mdService.Render(doc.getContent()));
+            mdService.save(md);
+            return ResponseEntity.ok(md);
+        });
     }
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> addDocument(@CookieValue(value = "_dt", defaultValue = "a") String token, @RequestBody MD md) {
-        User user = authorizator.authorizedUser(token);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
+    public ResponseEntity<Object> addDocument(@CookieValue(value = "_dt", defaultValue = "a") String token, @RequestBody MD md) {
+        return authorizator.RoleBased(token, UserRoles.ADMIN, user -> {
+            if (md == null)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
 
-        if (md == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
+            if (md.getPath() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getPath()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
 
-        if (md.getPath() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getPath()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
+            if (md.getContent() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getContent()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
 
-        if (md.getContent() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getContent()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
-
-        if (md.getTitle() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getContent()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
+            if (md.getTitle() == null || !HTMLStringProcessors.hasAtLeastOneNonSpaceCharacter(md.getContent()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
 
 
-        if (mdService.getByPath(md.getPath()) != null)
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("already exists");
+            if (mdService.getByPath(md.getPath()) != null)
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("already exists");
 
 
-        md.getTags().forEach(mdTag -> mdTag.setMd(md));
+            md.getTags().forEach(mdTag -> mdTag.setMd(md));
 
 
-        mdService.save(md);
-        //mdService.addDocument(body.getPath(), body.getContent());
+            mdService.save(md);
+            //mdService.addDocument(body.getPath(), body.getContent());
 
-        return ResponseEntity.ok("ok");
+            return ResponseEntity.ok("ok");
+        });
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<String> DeleteDocument(@CookieValue(value = "_dt", defaultValue = "a") String token, @RequestParam String param) {
-        User user = authorizator.authorizedUser(token);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
+    public ResponseEntity<Object> DeleteDocument(@CookieValue(value = "_dt", defaultValue = "a") String token, @RequestParam String param) {
+        return authorizator.RoleBased(token, UserRoles.ADMIN, user -> {
+            mdService.DeleteDocument(param);
 
-        mdService.DeleteDocument(param);
-
-        return ResponseEntity.ok("ok");
+            return ResponseEntity.ok("ok");
+        });
     }
 }

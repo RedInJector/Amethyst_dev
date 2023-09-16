@@ -2,17 +2,24 @@ package com.rij.amethyst_dev.Routes;
 
 
 import com.rij.amethyst_dev.DTO.Admin.AuthDataDTO;
-import com.rij.amethyst_dev.Helpers.Authorizator;
+import com.rij.amethyst_dev.DTO.User.IUserDTO;
+import com.rij.amethyst_dev.Enums.UserRoles;
+import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.Services.MCServerService;
 import com.rij.amethyst_dev.Services.MCserverAuthService;
 import com.rij.amethyst_dev.Services.UserService;
+import com.rij.amethyst_dev.jsons.AllowOnServer;
+import com.rij.amethyst_dev.jsons.BanUser;
 import com.rij.amethyst_dev.models.Userdb.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/admin")
@@ -24,6 +31,7 @@ public class Admin {
     private final UserService userService;
     private final DiscordBotService discordBotService;
     private final MCServerService mcServerService;
+    Logger logger = LoggerFactory.getLogger(Admin.class);
 
     public Admin(MCserverAuthService mCserverAuthService, Authorizator authorizator, UserService userService, DiscordBotService discordBotService, MCServerService mcServerService) {
         this.mCserverAuthService = mCserverAuthService;
@@ -36,171 +44,101 @@ public class Admin {
 
     @GetMapping("/authData")
     public ResponseEntity<Object> authData(@CookieValue(value = "_dt", defaultValue = "") String cookie) {
-        User user = authorizator.authorizedUser(cookie);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
-
-
-        return ResponseEntity.ok(
+        return authorizator.RoleBased(cookie, UserRoles.ADMIN, adm -> ResponseEntity.ok(
                 new AuthDataDTO(
                         mCserverAuthService.getAuthqueue(),
                         mCserverAuthService.getSessionManager().getSessions()
                 )
-        );
+        ));
     }
 
 
     @GetMapping("/players")
     public ResponseEntity<Object> getallplayers(@CookieValue(value = "_dt", defaultValue = "") String cookie,
                                                 @RequestParam(defaultValue = "0") int page) {
-        User user = authorizator.authorizedUser(cookie);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
-
-
-        return ResponseEntity.ok(userService.getUserPages(page));
+        return authorizator.RoleBased(cookie, UserRoles.MODERATOR, adm -> ResponseEntity.ok(userService.getUserPages(page)));
     }
 
 
-    @GetMapping("searchByName")
+    @GetMapping("/searchByName")
     public ResponseEntity<Object> getPlayersByName(@CookieValue(value = "_dt", defaultValue = "") String cookie,
-                                                   @RequestParam(defaultValue = "") String name) {
-        User user = authorizator.authorizedUser(cookie);
-        if (user == null || !user.isAdmin())
-            return UNAUTHORIZED;
-
-        if (name.isEmpty())
-            return ResponseEntity.ok("");
+                                                   @RequestParam(defaultValue = "") String name,
+                                                   @RequestParam(defaultValue = "0") int page) {
+        return authorizator.RoleBased(cookie, UserRoles.MODERATOR, adm -> {
+            if (name.isEmpty())
+                return ResponseEntity.ok("");
 
 
-        return ResponseEntity.ok(userService.getLikeName(name));
+            List<IUserDTO> users = userService.getLikeName(name, page).stream().map(User::toPrivateDTO).collect(Collectors.toList());
+
+            return ResponseEntity.ok(users);
+        });
     }
 
 
-    @PostMapping("banplayer")
-    public ResponseEntity<Object> banplayer(@CookieValue(value = "_dt", defaultValue = "") String cookie,
-                                            @RequestParam(defaultValue = "0") int id,
-                                            @RequestParam(defaultValue = "false") boolean banstatus,
-                                            @RequestParam(defaultValue = "bannned by admin") String reason) {
+    @PostMapping("/modifyuser/allowonserver")
+    public ResponseEntity<Object> AllowOnServer(@CookieValue(value = "_dt", defaultValue = "") String cookie, @RequestBody AllowOnServer body) {
+        return authorizator.RoleBased(cookie, UserRoles.MODERATOR, PaddingMatcher -> {
+            User user = userService.getById(body.getId()).orElse(null);
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
 
-        User adm = authorizator.authorizedUser(cookie);
-        if (adm == null || !adm.isAdmin())
-            return UNAUTHORIZED;
-
-        if (id == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
-
-        userService.getById(id).ifPresent(user -> {
-            if (banstatus) {
-                System.out.println(reason);
-            }
-
-            user.setBanned(banstatus);
+            discordBotService.givePlayerRole(user.getDiscordUser().getDiscordId());
+            mcServerService.addToWhitelist(user.getMinecraftPlayer().getPlayerName());
+            user.setHasPayed(body.isStatus());
             userService.saveUser(user);
-        });
+            logger.info("allowed On Server: " + user.getId() + ". " + user.getMinecraftPlayer().getPlayerName());
 
-        return ResponseEntity.ok("Ok");
+            return ResponseEntity.ok("Banned " + user.getId());
+        });
     }
 
-    @PostMapping("perma-banplayer")
-    public ResponseEntity<Object> unPermaBanplayer(@CookieValue(value = "_dt", defaultValue = "") String cookie,
-                                                   @RequestParam(defaultValue = "0") int id,
-                                                   @RequestParam(defaultValue = "false") boolean banstatus,
-                                                   @RequestParam(defaultValue = "bannned by admin") String reason) {
-        User adm = authorizator.authorizedUser(cookie);
-        if (adm == null || !adm.isAdmin())
-            return UNAUTHORIZED;
+    @PostMapping("/modifyuser/ban")
+    public ResponseEntity<Object> BanUser(@CookieValue(value = "_dt", defaultValue = "") String cookie, @RequestBody BanUser body) {
+        return authorizator.RoleBased(cookie, UserRoles.MODERATOR, PaddingMatcher -> {
+            User user = userService.getById(body.getId()).orElse(null);
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
 
-        if (id == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
+            user.setBanned(true);
+            if (body.isPermaban())
+                user.setUnbannable(false);
 
-        userService.getById(id).ifPresent(user -> {
-            if (banstatus) {
-                System.out.println(reason);
-            }
-            user.setUnbannable(!banstatus);
-            user.setBanned(banstatus);
+            mcServerService.ban(user.getMinecraftPlayer().getPlayerName(), body.getReason(), body.getTime());
             userService.saveUser(user);
-        });
+            logger.info("banned: " +
+                    user.getId() +
+                    ". " +
+                    user.getMinecraftPlayer().getPlayerName() +
+                    " reason:" +
+                    body.getReason());
 
-        return ResponseEntity.ok("Ok");
+            return ResponseEntity.ok("Banned " + user.getId());
+        });
     }
 
+    @PostMapping("/modifyuser/unban")
+    public ResponseEntity<Object> unBanUser(@CookieValue(value = "_dt", defaultValue = "") String cookie, @RequestBody BanUser body) {
+        return authorizator.RoleBased(cookie, UserRoles.MODERATOR, adm -> {
+            User user = userService.getById(body.getId()).orElse(null);
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
 
-    @PostMapping("/update-user")
-    public ResponseEntity<Object> updateUserData(@CookieValue(value = "_dt", defaultValue = "") String cookie,
-                                                 @RequestBody Map<String, String> body) {
-
-        User adm = authorizator.authorizedUser(cookie);
-        if (adm == null || !adm.isAdmin())
-            return UNAUTHORIZED;
-
-
-        System.out.println(body);
-
-        if (body.containsKey("id") && Integer.parseInt(body.get("id")) == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
-
-        int uid = Integer.parseInt(body.get("id"));
-        User user = userService.getById(uid).orElse(null);
-        if (user == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
+            user.setBanned(false);
+            user.setUnbannable(true);
+            mcServerService.unban(user.getMinecraftPlayer().getPlayerName());
+            userService.saveUser(user);
+            logger.info("unbanned: " +
+                    user.getId() +
+                    ". " +
+                    user.getMinecraftPlayer().getPlayerName());
 
 
-        body.forEach((key, value) -> {
-            switch (key) {
-                case "setBan":
-                    boolean status = Boolean.parseBoolean(value);
-                    user.setBanned(status);
-
-                    if (status) {
-                        String reason;
-                        if (!body.containsKey("banReason"))
-                            reason = "banned by admin";
-                        else
-                            reason = body.get("banReason");
-
-                        mcServerService.ban(user.getMinecraftPlayer().getPlayerName(), reason);
-                    } else
-                        mcServerService.unban(user.getMinecraftPlayer().getPlayerName());
-                    break;
-                case "setUnbannable":
-                    status = Boolean.parseBoolean(value);
-                    user.setBanned(!status);
-                    user.setUnbannable(status);
-                    if (status) {
-                        String reason;
-                        if (!body.containsKey("banReason"))
-                            reason = "banned by admin";
-                        else
-                            reason = body.get("banReason");
-
-                        mcServerService.ban(user.getMinecraftPlayer().getPlayerName(), reason);
-                    } else
-                        mcServerService.unban(user.getMinecraftPlayer().getPlayerName());
-
-
-                    break;
-                case "setHasPayed":
-                    status = Boolean.parseBoolean(value);
-                    user.setHasPayed(status);
-
-                    if (status) {
-                        discordBotService.givePlayerRole(user.getDiscordUser().getDiscordId());
-                        mcServerService.addToWhitelist(user.getMinecraftPlayer().getPlayerName());
-                    }
-
-                    break;
-
-            }
+            return ResponseEntity.ok("Banned " + user.getId());
         });
-
-
-        userService.saveUser(user);
-
-
-        return ResponseEntity.ok("Ok");
     }
-
-
 }
+
+
+
+

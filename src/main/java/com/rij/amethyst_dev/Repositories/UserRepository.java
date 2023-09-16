@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Page<User> getAll(Pageable pageable);
     @EntityGraph(attributePaths = { "minecraftPlayer", "discordUser" })
-    @Query("SELECT u FROM User u WHERE u.minecraftPlayer.playerName LIKE %?1%")
-    List<User> findByMinecraftName(String name);
+    @Query("SELECT u FROM User u WHERE concat(u.minecraftPlayer.playerName, u.id, u.discordUser.discordId, u.discordUser.publicUsername) LIKE %?1%")
+    List<User> findByMinecraftName(String name, Pageable pageable);
 
     @EntityGraph(attributePaths = { "minecraftPlayer" })
     User findByDiscordUserDiscordId(String discordId);

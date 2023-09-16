@@ -3,9 +3,10 @@ package com.rij.amethyst_dev.Routes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rij.amethyst_dev.Enums.UserRoles;
 import com.rij.amethyst_dev.events.UserAddedMinecraftName;
 import com.rij.amethyst_dev.DTO.User.Builder.UserDataDTOBuilder;
-import com.rij.amethyst_dev.Helpers.Authorizator;
+import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Helpers.MinecraftNameValidator;
 import com.rij.amethyst_dev.PlanData.PlanDataService;
 import com.rij.amethyst_dev.Services.DiscordBotService;
@@ -48,17 +49,6 @@ public class PrivatePlayerRoute {
         this.eventPublisher = eventPublisher;
         this.mcServerService = mcServerService;
     }
-
-    private Function<Object, ResponseEntity<String>> mapjson = obj -> {
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    return ResponseEntity.ok().body(objectMapper.writeValueAsString(obj));
-                } catch (JsonProcessingException e) {
-                    //TODO: logger.error(String.valueOf(e));
-                    return ResponseEntity.internalServerError().body("Internal Error");
-                }
-            };
-
 
     @GetMapping("/check-minecraft-name")
     public ResponseEntity<String> checkMinecraftName(@RequestParam(defaultValue = "") String name) {
@@ -103,35 +93,34 @@ public class PrivatePlayerRoute {
 
 
     @GetMapping()
-    public ResponseEntity<String> TESTgetPrivatePlayer(
+    public ResponseEntity<Object> TESTgetPrivatePlayer(
             @CookieValue(value = "_dt", defaultValue = "a") String token,
             @RequestParam(value = "include", required = true) List<String> includes
     ) {
-        User user = authorizator.authorizedUser(token);
-        if(user == null)
-            return UNAUTHORIZED;
+        return authorizator.RoleBased(token, UserRoles.EDITOR, user -> {
+                    UserDataDTOBuilder builder = new UserDataDTOBuilder();
 
-        UserDataDTOBuilder builder = new UserDataDTOBuilder();
+            includes.forEach(string -> {
+                switch (string) {
+                    case "user":
+                        builder.addPrivateUserData(user);
+                        break;
+                    case "stats":
+                        builder.addStatisticsData(planDataService, user);
+                        break;
+                    case "roles":
+                        builder.addRoles(discordBotService, user);
+                        break;
+                    case "last-online":
+                        builder.addLastTimeOnServer(planDataService, mcServerService ,user);
+                        break;
+                }
+            });
 
-
-        includes.forEach(string -> {
-            switch (string) {
-                case "user":
-                    builder.addPrivateUserData(user);
-                    break;
-                case "stats":
-                    builder.addStatisticsData(planDataService, user);
-                    break;
-                case "roles":
-                    builder.addRoles(discordBotService, user);
-                    break;
-                case "last-online":
-                    builder.addLastTimeOnServer(planDataService, mcServerService ,user);
-                    break;
-            }
+            return ResponseEntity.ok(builder.build());
         });
 
-        return mapjson.apply(builder.build());
+
     }
 
 }

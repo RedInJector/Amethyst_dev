@@ -1,4 +1,4 @@
-package com.rij.amethyst_dev.MarkdownProcessing.MD;
+package com.rij.amethyst_dev.models.MD;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

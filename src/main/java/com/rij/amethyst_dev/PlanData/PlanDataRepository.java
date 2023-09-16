@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev.PlanData;
 
 import com.rij.amethyst_dev.DTO.AllPlaytime;
+import com.rij.amethyst_dev.DTO.AllPlaytime2;
 import com.rij.amethyst_dev.DTO.User.PlayTimeDateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -123,4 +126,63 @@ public class PlanDataRepository {
     }
 
 
+
+    public List<AllPlaytime2> getAllPlaytimeForUsers(List<Integer> userIDs) {
+        String sql = "SELECT " +
+                "user_id AS userid, " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_day_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_week_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start >= ? AND session_end <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS last_month_seconds, " +
+                "ROUND(SUM(CASE WHEN session_start <= ? THEN (LEAST(session_end, ?) - session_start) / 1000 ELSE 0 END)) AS all_time_seconds " +
+                "FROM plan_sessions WHERE user_id = ?";
+
+        StringBuilder dynamicSql = new StringBuilder();
+        for (int i = 0; i < userIDs.size(); i++) {
+            dynamicSql.append(sql);
+            if (i < userIDs.size() - 1) {
+                dynamicSql.append(" UNION ALL ");
+            }
+        }
+
+        List<Object> params = new ArrayList<>();
+        long now = System.currentTimeMillis() / 1000;
+        long lastDay = now - 86400;
+        long lastWeek = now - 604800;
+        long lastMonth = now - 2592000;
+
+        for (Integer userID : userIDs) {
+            params.add(lastDay * 1000);
+            params.add(now * 1000);
+            params.add(now * 1000);
+            params.add(lastWeek * 1000);
+            params.add(now * 1000);
+            params.add(now * 1000);
+            params.add(lastMonth * 1000);
+            params.add(now * 1000);
+            params.add(now * 1000);
+            params.add(now * 1000);
+            params.add(now * 1000);
+            params.add(userID);
+        }
+
+        try {
+            return jdbcTemplate.query(dynamicSql.toString(), params.toArray(), new PlayerRowMapper3());
+        } catch (Exception e) {
+            // Handle the exception
+            return Collections.emptyList();
+        }
+    }
+
+    public class PlayerRowMapper3 implements RowMapper<AllPlaytime2> {
+        @Override
+        public AllPlaytime2 mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new AllPlaytime2(
+                    Integer.valueOf(rs.getString("userid")),
+                    rs.getString("last_day_seconds"),
+                    rs.getString("last_week_seconds"),
+                    rs.getString("last_month_seconds"),
+                    rs.getString("all_time_seconds")
+            );
+        }
+    }
 }

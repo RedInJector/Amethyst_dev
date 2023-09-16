@@ -117,7 +117,7 @@ public class UserService {
 
     public UserPages getUserPages(int page){
 
-        Pageable pageable = PageRequest.of(page, 20);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<User> a = userRepository.getAll(pageable);
         List<UserDataDTO> userDTOs = new ArrayList<>();
         a.getContent().forEach(user1 ->
@@ -127,8 +127,9 @@ public class UserService {
 
     }
 
-    public List<User> getLikeName(String name){
-        return userRepository.findByMinecraftName(name);
+    public List<User> getLikeName(String name, int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        return userRepository.findByMinecraftName(name, pageable);
     }
 
     public User getUserByDiscordId(String discordid){

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.rij.amethyst_dev.DTO.User.IUserDTO;
 import com.rij.amethyst_dev.DTO.User.Private.PrivateUserDTO;
 import com.rij.amethyst_dev.DTO.User.Public.PublicUserDTO;
+import com.rij.amethyst_dev.Enums.UserRoles;
 import com.rij.amethyst_dev.models.Views;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import jakarta.persistence.*;
@@ -44,7 +45,6 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Oauth oauth;
 
-    private boolean admin = false;
 
     @JsonView(Views.ServerOnly.class)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -52,8 +52,15 @@ public class User {
 
     private Integer planUserId;
 
+    @Enumerated(EnumType.STRING)
+    private UserRoles role;
+
 
     public User(){}
+
+    public boolean isAdmin(){
+        return role.hasPermission(UserRoles.EDITOR);
+    }
 
 
     public void addAccessToken(AccessToken accessToken){
@@ -124,7 +131,8 @@ public class User {
                     isHasPayed(),
                     isBanned(),
                     isAdmin(),
-                    unbannable
+                    unbannable,
+                    role
             );
         } else {
             return new PublicUserDTO(
