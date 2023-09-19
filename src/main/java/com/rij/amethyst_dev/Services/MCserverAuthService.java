@@ -11,6 +11,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,10 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     private final Map<String, CachedEntity> Authqueue = new HashMap<>();
     private final Map<String, String> NameCode = new HashMap<>();
 
-    private final SessionManager sessionManager = new SessionManager(120);
+    @Value("${minecraft.server.authsessiontime}")
+    private int maxsessionTime;
+
+    private final SessionManager sessionManager;
 
     private final DiscordBotService discordBotService;
     private final ScheduledExecutorService executorService;
@@ -42,6 +46,7 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     public MCserverAuthService(DiscordBotService discordBotService) {
         this.discordBotService = discordBotService;
         executorService = Executors.newSingleThreadScheduledExecutor();
+        sessionManager = new SessionManager(maxsessionTime);
     }
 
     public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> response, MinecraftSession minecraftSession){

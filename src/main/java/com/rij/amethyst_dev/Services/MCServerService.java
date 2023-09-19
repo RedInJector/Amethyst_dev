@@ -27,7 +27,6 @@ public class MCServerService {
 
     public MCServerService(RetryMCServerCallService retryMCServerCallService){
         this.retryMCServerCallService = retryMCServerCallService;
-        URLS.setServerIPPort(MINECRAFT_SERVER_IP);
     }
 
     public void setOnline(String name, boolean status){
@@ -61,9 +60,9 @@ public class MCServerService {
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(URLS.WhitelistAdd, requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(URLS.WhitelistAdd(), requestEntity, String.class);
         }catch (Exception any){
-            retryMCServerCallService.add(new PostCall(URLS.LibertyBansUnBan, requestEntity));
+            retryMCServerCallService.add(new PostCall(URLS.LibertyBansUnBan(), requestEntity));
         }
     }
 
@@ -83,7 +82,7 @@ public class MCServerService {
 
         ResponseEntity<String> response;
         try {
-            response = restTemplate.exchange(URLS.LibertyBansBan, HttpMethod.GET, requestEntity, String.class);
+            response = restTemplate.exchange(URLS.LibertyBansBan(), HttpMethod.GET, requestEntity, String.class);
             if(response.getStatusCode().is2xxSuccessful())
                 logger.info(name + " Was successfully Banned");
 
@@ -106,7 +105,7 @@ public class MCServerService {
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 
         try {
-        ResponseEntity<String> response = restTemplate.exchange(URLS.LibertyBansUnBan, HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(URLS.LibertyBansUnBan(), HttpMethod.GET, requestEntity, String.class);
 
         if(response.getStatusCode().is2xxSuccessful())
             logger.info(name + " Was successfully unBanned");

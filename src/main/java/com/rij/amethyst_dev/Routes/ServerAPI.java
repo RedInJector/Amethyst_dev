@@ -88,8 +88,6 @@ public class ServerAPI {
     @PostMapping("/set-banned")
     public ResponseEntity<String> banPlayer(@RequestHeader("Authorization") String apikey, @RequestBody String uuid){
 
-        System.out.println(uuid);
-
         if(!StringComparator.compareAPIKeys(APIKEY, apikey))
             return ResponseEntity.badRequest().body("Bad Request");
 
@@ -110,9 +108,6 @@ public class ServerAPI {
 
     @PostMapping("/set-pardonned")
     public ResponseEntity<String> pardonPlayer(@RequestHeader("Authorization") String apikey, @RequestBody String uuid){
-
-        System.out.println(uuid);
-        System.out.println(apikey);
 
         if(!StringComparator.compareAPIKeys(APIKEY, apikey))
             return ResponseEntity.badRequest().body("Bad Request");

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -53,14 +54,44 @@ public class DiscordBotService {
 
         EmbedBuilder eb = EmbedGenerator.AuthEmbed(user.getMinecraftPlayer().getPlayerName());
 
-        TextChannel textChannel = getUsableChannel(duser);
+        try {
+            PrivateChannel channel = duser.openPrivateChannel().complete();
+
+            Message message = channel.sendMessageEmbeds(eb.build()).addActionRow(
+                    Button.primary(buttonID, "Прийняти")
+            ).complete();
+            return message;
+        }
+        catch (Exception any){
+
+            String guildid = discordBot.getGuildID();
+            String categoryid = discordBot.getEmergencycategoryid();
+
+            Member member = discordBot.getJda().getGuildById(guildid).retrieveMemberById(duser.getId()).complete();
 
 
+            TextChannel textChannel = null;
 
-        var a = textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Accept")).complete();
-        System.out.println(a.getMessageReference().getChannelId());
+            Category category = discordBot.getJda().getGuildById(guildid).getCategoryById(categoryid);
 
-        return a;
+            for(Channel channel : category.getChannels()){
+                if(channel.getName().toLowerCase().equals(duser.getName().toLowerCase()))
+                    textChannel = (TextChannel) channel;
+            }
+
+            if(textChannel != null){
+                return textChannel.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Прийняти")).complete();
+            }
+
+            Guild guild = discordBot.getJda().getGuildById(guildid);
+            TextChannel textChannel1 = guild.getCategoryById(categoryid).createTextChannel(duser.getName().toLowerCase()).complete();
+
+
+            textChannel1.upsertPermissionOverride(member).grant(Permission.VIEW_CHANNEL).queue();
+
+
+            return textChannel1.sendMessageEmbeds(eb.build()).addActionRow(Button.primary(buttonID, "Прийняти")).complete();
+        }
     }
 
     public void GreetFirstTime(String discordid){

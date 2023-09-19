@@ -155,8 +155,11 @@ public class PlayerRoute {
     @Cacheable(value = "skins", key = "#name")
     public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {
 
+        URLS.setServerIPPort(MINECRAFT_SERVER_IP);
         RestTemplate restTemplate = new RestTemplate();
-        String mcserverUrl = URLS.Skin + "/" + name;
+        String mcserverUrl = URLS.Skin() + "/" + name;
+
+        System.out.println(mcserverUrl);
 
         String imageUrl = "";
         try {
@@ -228,11 +231,12 @@ public class PlayerRoute {
     // TODO WHF??? java.lang.IllegalArgumentException: image == null!
     @GetMapping(value = "/{name}/skin.png",
             produces = MediaType.IMAGE_PNG_VALUE)
-    @Cacheable(value = "heads", key = "#name")
+    //@Cacheable(value = "heads", key = "#name")
     public ResponseEntity<byte[]> getskin(@PathVariable("name") String name){
-
+        URLS.setServerIPPort(MINECRAFT_SERVER_IP);
+        System.out.println(MINECRAFT_SERVER_IP);
         RestTemplate restTemplate = new RestTemplate();
-        String mcserverUrl = URLS.Skin + "/" + name;
+        String mcserverUrl = URLS.Skin() + "/" + name;
 
         String imageUrl = "https://mc-heads.net/skin/" + name + ".png";
         try {
@@ -285,6 +289,7 @@ public class PlayerRoute {
 
     @GetMapping(value = "/{name}/isonline")
     public ResponseEntity<String> isOnline(@PathVariable("name") String name){
+
 
         User user = userService.getUserWithMinecraftname(name);
         if (user == null){

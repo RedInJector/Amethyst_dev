@@ -65,7 +65,7 @@ public class PrivatePlayerRoute {
         return ResponseEntity.status(HttpStatus.OK).body("Ok");
     }
 
-    @GetMapping("/submit-minecraft-name")
+    @PostMapping("/submit-minecraft-name")
     public ResponseEntity<String> addMinecraftName(@CookieValue(value = "_dt", defaultValue = "") String cookie, @RequestBody Submitname body){
         MinecraftPlayer mp = userService.getMinecraftPlayer(body.getName());
         if(mp != null)
@@ -97,7 +97,7 @@ public class PrivatePlayerRoute {
             @CookieValue(value = "_dt", defaultValue = "a") String token,
             @RequestParam(value = "include", required = true) List<String> includes
     ) {
-        return authorizator.RoleBased(token, UserRoles.EDITOR, user -> {
+        return authorizator.RoleBased(token, UserRoles.PLAYER, user -> {
                     UserDataDTOBuilder builder = new UserDataDTOBuilder();
 
             includes.forEach(string -> {

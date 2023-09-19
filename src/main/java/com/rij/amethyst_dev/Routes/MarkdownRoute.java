@@ -60,7 +60,7 @@ public class MarkdownRoute {
             mdService.save(md);
         }
 
-        md.setContent(null);
+        //md.setContent(null);
 
         return ResponseEntity.ok(md);
     }
