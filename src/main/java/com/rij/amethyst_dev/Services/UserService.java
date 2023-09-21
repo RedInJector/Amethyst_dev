@@ -3,6 +3,7 @@ package com.rij.amethyst_dev.Services;
 import com.rij.amethyst_dev.DTO.Admin.UserPages;
 import com.rij.amethyst_dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.DTO.User.UserDataDTO;
+import com.rij.amethyst_dev.Enums.UserRoles;
 import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
@@ -60,6 +61,8 @@ public class UserService {
         if(existinguser == null){
             if(autoban.contains(user.getDiscordUser().getDiscordId()))
                 user.setBanned(true);
+
+            user.setRole(UserRoles.PLAYER);
 
             saveUser(user);
             UserRegisteredEvent event = new UserRegisteredEvent(this, user);

@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev.Routes;
 
 import com.rij.amethyst_dev.Configuration.oAuthConfig;
+import com.rij.amethyst_dev.Enums.UserRoles;
 import com.rij.amethyst_dev.events.UserRegistered;
 import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
@@ -54,14 +55,6 @@ public class AuthRoute {
 
         User user = User.getUserFromDiscordUser(discordUser);
 
-
-        User existingUser = userService.getUser(user);
-        if(existingUser == null){
-            userService.saveUser(user);
-
-            UserRegistered event = new UserRegistered(this, user);
-            eventPublisher.publishEvent(event);
-        }
 
 
         user = userService.saveUserIfNotExists(user);

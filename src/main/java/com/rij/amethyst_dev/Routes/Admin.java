@@ -84,7 +84,9 @@ public class Admin {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD_REQUEST");
 
             discordBotService.givePlayerRole(user.getDiscordUser().getDiscordId());
-            mcServerService.addToWhitelist(user.getMinecraftPlayer().getPlayerName());
+            if(body.isStatus())
+                mcServerService.addToWhitelist(user.getMinecraftPlayer().getPlayerName());
+
             user.setHasPayed(body.isStatus());
             userService.saveUser(user);
             logger.info("allowed On Server: " + user.getId() + ". " + user.getMinecraftPlayer().getPlayerName());

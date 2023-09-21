@@ -65,6 +65,27 @@ public class MCServerService {
             retryMCServerCallService.add(new PostCall(URLS.LibertyBansUnBan(), requestEntity));
         }
     }
+    public void removeFromWhitelist(String username){
+        RestTemplate restTemplate = new RestTemplate();
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", MINECRAFT_SERVER_API_KEY);
+        headers.add("name", username);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+
+        String requestBody = "";
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(URLS.WhitelistRemove(), requestEntity, String.class);
+        }catch (Exception any){
+            retryMCServerCallService.add(new PostCall(URLS.LibertyBansUnBan(), requestEntity));
+        }
+    }
+
+
 
 
     // TODO: remake to POST

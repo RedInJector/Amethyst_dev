@@ -4,7 +4,6 @@ import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.MinecraftAuth.CachedEntity;
 import com.rij.amethyst_dev.MinecraftAuth.MinecraftSession;
 import com.rij.amethyst_dev.MinecraftAuth.SessionManager;
-import com.rij.amethyst_dev.Routes.AuthRoute;
 import com.rij.amethyst_dev.bot.DiscordEventHandlers.MessageReaction;
 import com.rij.amethyst_dev.models.Userdb.User;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     @Value("${minecraft.server.authsessiontime}")
     private int maxsessionTime;
 
-    private final SessionManager sessionManager;
+    private final SessionManager sessionManager = new SessionManager(720);;
 
     private final DiscordBotService discordBotService;
     private final ScheduledExecutorService executorService;
@@ -46,7 +45,6 @@ public class MCserverAuthService implements ApplicationListener<ContextRefreshed
     public MCserverAuthService(DiscordBotService discordBotService) {
         this.discordBotService = discordBotService;
         executorService = Executors.newSingleThreadScheduledExecutor();
-        sessionManager = new SessionManager(maxsessionTime);
     }
 
     public void addToAuthQueue(User user, CompletableFuture<ResponseEntity<String>> response, MinecraftSession minecraftSession){

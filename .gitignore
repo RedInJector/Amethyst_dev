@@ -36,3 +36,6 @@ build/
 !/src/.env
 /tmp/
 /target/
+!/src/.env
+!/src/.env
+!/src/.env

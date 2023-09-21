@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class SessionManager {
     private final HashMap<MinecraftSession, Long> sessions = new HashMap<>();
     private final HashMap<String, MinecraftSession> nameSession = new HashMap<>();
-    private int maxSessionTime = 120; //minutes
+    private int maxSessionTime = 720; //minutes
     public SessionManager(int maxSessionTime){
         this.maxSessionTime = maxSessionTime;
     }
