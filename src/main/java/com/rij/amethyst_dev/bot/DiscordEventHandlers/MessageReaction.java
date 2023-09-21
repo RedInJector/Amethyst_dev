@@ -1,6 +1,6 @@
 package com.rij.amethyst_dev.bot.DiscordEventHandlers;
 
-import com.rij.amethyst_dev.MinecraftAuth.MCserverAuthService;
+import com.rij.amethyst_dev.Services.MCserverAuthService;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

@@ -1,6 +1,5 @@
 package com.rij.amethyst_dev.MinecraftAuth;
 
-import com.rij.amethyst_dev.jsons.minecraftAuth.MinecraftSession;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import org.springframework.http.ResponseEntity;

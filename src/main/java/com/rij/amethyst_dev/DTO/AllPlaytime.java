@@ -7,3 +7,4 @@ public record AllPlaytime(
         String allTimeSeconds
 ) {
 }
+

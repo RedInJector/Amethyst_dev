@@ -1,19 +1,19 @@
 package com.rij.amethyst_dev.bot.DiscordEventHandlers;
 
 
-import com.rij.amethyst_dev.webSockets.GuildSocket.GuildSocketService;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.context.ApplicationEventPublisher;
 
 
 public class GuildJoin extends ListenerAdapter {
 
     private final String GuildID;
-    private final GuildSocketService guildSocketService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public GuildJoin(String guildID, GuildSocketService guildSocketService) {
+    public GuildJoin(String guildID, ApplicationEventPublisher eventPublisher) {
         GuildID = guildID;
-        this.guildSocketService = guildSocketService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -23,8 +23,12 @@ public class GuildJoin extends ListenerAdapter {
             return;
 
 
-        String discordid = event.getUser().getId();
+        eventPublisher.publishEvent(new com.rij.amethyst_dev.events.DiscordRelated.GuildJoin(this, event));
 
+
+        /*
+        String discordid = event.getUser().getId();
         guildSocketService.sendMessage(discordid);
+        */
     }
 }

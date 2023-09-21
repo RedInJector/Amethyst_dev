@@ -1,7 +1,7 @@
 package com.rij.amethyst_dev.webSockets.PaymentSocket;
 
 import com.rij.amethyst_dev.models.Userdb.User;
-import com.rij.amethyst_dev.models.Userdb.UserService;
+import com.rij.amethyst_dev.Services.UserService;
 import com.rij.amethyst_dev.webSockets.Helper;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;

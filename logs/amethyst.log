@@ -1,0 +1,193 @@
+2023-09-18T20:17:49.465+02:00  INFO 3456 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Starting AmethystDevApplication using Java 19.0.2 with PID 3456 (Z:\JavaTesting\Amethyst_dev\target\classes started by Max in Z:\JavaTesting\Amethyst_dev)
+2023-09-18T20:17:49.470+02:00  INFO 3456 --- [main] c.r.amethyst_dev.AmethystDevApplication  : No active profile set, falling back to 1 default profile: "default"
+2023-09-18T20:17:50.145+02:00  INFO 3456 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-18T20:17:50.208+02:00  INFO 3456 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 7 JPA repository interfaces.
+2023-09-18T20:17:50.666+02:00  INFO 3456 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-18T20:17:50.673+02:00  INFO 3456 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-18T20:17:50.673+02:00  INFO 3456 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-18T20:17:50.750+02:00  INFO 3456 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-18T20:17:50.750+02:00  INFO 3456 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1253 ms
+2023-09-18T20:17:50.938+02:00  INFO 3456 --- [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.5.1 by Redgate
+2023-09-18T20:17:50.939+02:00  INFO 3456 --- [main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#9.5.1
+2023-09-18T20:17:50.939+02:00  INFO 3456 --- [main] o.f.c.internal.license.VersionPrinter    : 
+2023-09-18T20:17:50.944+02:00  INFO 3456 --- [main] o.f.c.i.resource.ResourceNameValidator   : 1 SQL migrations were detected but not run because they did not follow the filename convention.
+2023-09-18T20:17:50.944+02:00  INFO 3456 --- [main] o.f.c.i.resource.ResourceNameValidator   : If this is in error, enable debug logging or 'validateMigrationNaming' to fail fast and see a list of the invalid file names.
+2023-09-18T20:17:51.170+02:00  INFO 3456 --- [main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mariadb://ametis.xyz/project_amethyst_dev2 (MariaDB 10.6)
+2023-09-18T20:17:51.977+02:00  INFO 3456 --- [main] o.f.core.internal.command.DbValidate     : Successfully validated 10 migrations (execution time 00:00.358s)
+2023-09-18T20:17:52.599+02:00  INFO 3456 --- [main] o.f.core.internal.command.DbMigrate      : Current version of schema `project_amethyst_dev2`: 1.5
+2023-09-18T20:17:52.647+02:00  INFO 3456 --- [main] o.f.core.internal.command.DbMigrate      : Schema `project_amethyst_dev2` is up to date. No migration necessary.
+2023-09-18T20:17:52.911+02:00  INFO 3456 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-18T20:17:52.949+02:00  INFO 3456 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-18T20:17:53.165+02:00  INFO 3456 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-18T20:17:53.451+02:00  INFO 3456 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@7d7d8911
+2023-09-18T20:17:53.452+02:00  INFO 3456 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-18T20:17:53.523+02:00  INFO 3456 --- [main] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2023-09-18T20:17:54.167+02:00  INFO 3456 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-18T20:17:54.177+02:00  INFO 3456 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T20:17:54.869+02:00  WARN 3456 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-18T20:17:55.314+02:00  INFO 3456 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2023-09-18T20:17:55.378+02:00  INFO 3456 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-18T20:17:55.391+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T20:17:55.391+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T20:17:55.392+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T20:17:55.392+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T20:17:55.392+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T20:17:55.930+02:00  INFO 3456 --- [main] net.dv8tion.jda.api.JDA                  : Login Successful!
+2023-09-18T20:17:56.236+02:00  INFO 3456 --- [JDA MainWS-WriteThread] n.d.j.internal.requests.WebSocketClient  : Connected to WebSocket
+2023-09-18T20:17:57.138+02:00  INFO 3456 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-18T20:17:57.138+02:00  INFO 3456 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-09-18T20:17:57.140+02:00  INFO 3456 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2023-09-18T20:17:57.174+02:00  INFO 3456 --- [http-nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2023-09-18T20:17:57.336+02:00  INFO 3456 --- [http-nio-8080-exec-1] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.mariadb.jdbc.Connection@36df523f
+2023-09-18T20:17:57.336+02:00  INFO 3456 --- [http-nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2023-09-18T20:17:57.627+02:00  INFO 3456 --- [JDA MainWS-ReadThread] net.dv8tion.jda.api.JDA                  : Finished Loading!
+2023-09-18T20:17:57.636+02:00  INFO 3456 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Started AmethystDevApplication in 8.472 seconds (process running for 9.028)
+2023-09-18T20:17:58.074+02:00  INFO 3456 --- [RMI TCP Connection(5)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2023-09-18T20:17:58.233+02:00  INFO 3456 --- [RMI TCP Connection(5)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.mariadb.jdbc.Connection@2de7a793
+2023-09-18T20:17:58.234+02:00  INFO 3456 --- [RMI TCP Connection(5)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2023-09-18T20:34:35.396+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T20:36:15.396+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T20:37:55.391+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T20:39:35.403+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T20:41:15.396+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T20:51:15.391+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T20:54:35.404+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T20:57:57.879+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T21:01:17.882+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T21:04:37.879+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T21:07:57.884+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T21:12:57.881+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T21:17:57.888+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T21:22:57.887+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T21:24:37.883+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T21:27:57.875+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T21:31:17.875+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T21:37:57.879+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T21:41:17.879+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T21:44:37.879+02:00  INFO 3456 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T21:44:57.729+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2023-09-18T21:44:57.886+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2023-09-18T21:44:57.886+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2023-09-18T21:44:58.045+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2023-09-18T21:44:58.046+02:00  INFO 3456 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T21:44:58.051+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-18T21:44:58.201+02:00  INFO 3456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-18T22:16:36.857+02:00  INFO 20048 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Starting AmethystDevApplication using Java 19.0.2 with PID 20048 (Z:\JavaTesting\Amethyst_dev\target\classes started by Max in Z:\JavaTesting\Amethyst_dev)
+2023-09-18T22:16:36.858+02:00  INFO 20048 --- [main] c.r.amethyst_dev.AmethystDevApplication  : No active profile set, falling back to 1 default profile: "default"
+2023-09-18T22:16:37.644+02:00  INFO 20048 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-18T22:16:37.706+02:00  INFO 20048 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 56 ms. Found 7 JPA repository interfaces.
+2023-09-18T22:16:38.158+02:00  INFO 20048 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-18T22:16:38.165+02:00  INFO 20048 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-18T22:16:38.165+02:00  INFO 20048 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-18T22:16:38.247+02:00  INFO 20048 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-18T22:16:38.248+02:00  INFO 20048 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1360 ms
+2023-09-18T22:16:38.430+02:00  INFO 20048 --- [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.5.1 by Redgate
+2023-09-18T22:16:38.430+02:00  INFO 20048 --- [main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#9.5.1
+2023-09-18T22:16:38.430+02:00  INFO 20048 --- [main] o.f.c.internal.license.VersionPrinter    : 
+2023-09-18T22:16:38.436+02:00  INFO 20048 --- [main] o.f.c.i.resource.ResourceNameValidator   : 1 SQL migrations were detected but not run because they did not follow the filename convention.
+2023-09-18T22:16:38.436+02:00  INFO 20048 --- [main] o.f.c.i.resource.ResourceNameValidator   : If this is in error, enable debug logging or 'validateMigrationNaming' to fail fast and see a list of the invalid file names.
+2023-09-18T22:16:38.613+02:00  INFO 20048 --- [main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mariadb://ametis.xyz/project_amethyst_dev2 (MariaDB 10.6)
+2023-09-18T22:16:39.143+02:00  INFO 20048 --- [main] o.f.core.internal.command.DbValidate     : Successfully validated 10 migrations (execution time 00:00.238s)
+2023-09-18T22:16:39.553+02:00  INFO 20048 --- [main] o.f.core.internal.command.DbMigrate      : Current version of schema `project_amethyst_dev2`: 1.5
+2023-09-18T22:16:39.584+02:00  INFO 20048 --- [main] o.f.core.internal.command.DbMigrate      : Schema `project_amethyst_dev2` is up to date. No migration necessary.
+2023-09-18T22:16:39.799+02:00  INFO 20048 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-18T22:16:39.843+02:00  INFO 20048 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-18T22:16:40.063+02:00  INFO 20048 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-18T22:16:40.232+02:00  INFO 20048 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@3c4059a
+2023-09-18T22:16:40.233+02:00  INFO 20048 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-18T22:16:40.288+02:00  INFO 20048 --- [main] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2023-09-18T22:16:40.997+02:00  INFO 20048 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-18T22:16:41.004+02:00  INFO 20048 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T22:16:42.122+02:00  WARN 20048 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-18T22:16:42.745+02:00  INFO 20048 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2023-09-18T22:16:42.835+02:00  INFO 20048 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-18T22:16:42.850+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T22:16:42.851+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T22:16:42.851+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T22:16:42.851+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T22:16:42.851+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T22:16:43.531+02:00  INFO 20048 --- [main] net.dv8tion.jda.api.JDA                  : Login Successful!
+2023-09-18T22:16:43.832+02:00  INFO 20048 --- [JDA MainWS-WriteThread] n.d.j.internal.requests.WebSocketClient  : Connected to WebSocket
+2023-09-18T22:16:45.234+02:00  INFO 20048 --- [JDA MainWS-ReadThread] net.dv8tion.jda.api.JDA                  : Finished Loading!
+2023-09-18T22:16:45.244+02:00  INFO 20048 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Started AmethystDevApplication in 8.738 seconds (process running for 9.441)
+2023-09-18T22:16:45.860+02:00  INFO 20048 --- [RMI TCP Connection(1)-26.108.94.108] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-18T22:16:45.861+02:00  INFO 20048 --- [RMI TCP Connection(1)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-09-18T22:16:45.862+02:00  INFO 20048 --- [RMI TCP Connection(1)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-09-18T22:16:45.936+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2023-09-18T22:16:46.176+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.mariadb.jdbc.Connection@1ceae677
+2023-09-18T22:16:46.176+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2023-09-18T22:16:46.224+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2023-09-18T22:16:46.388+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.mariadb.jdbc.Connection@27c2aaa8
+2023-09-18T22:16:46.389+02:00  INFO 20048 --- [RMI TCP Connection(3)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2023-09-18T22:19:29.550+02:00  INFO 20048 --- [http-nio-8080-exec-1] com.rij.amethyst_dev.Routes.Admin        : unbanned: 6. RedInJector
+2023-09-18T22:33:22.860+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T22:35:02.863+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T22:36:42.859+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T22:38:22.856+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T22:40:02.863+02:00  INFO 20048 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T22:41:26.682+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2023-09-18T22:41:26.833+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2023-09-18T22:41:26.833+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2023-09-18T22:41:26.993+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2023-09-18T22:41:26.995+02:00  INFO 20048 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T22:41:26.998+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-18T22:41:27.153+02:00  INFO 20048 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-18T22:41:30.504+02:00  INFO 18068 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Starting AmethystDevApplication using Java 19.0.2 with PID 18068 (Z:\JavaTesting\Amethyst_dev\target\classes started by Max in Z:\JavaTesting\Amethyst_dev)
+2023-09-18T22:41:30.505+02:00  INFO 18068 --- [main] c.r.amethyst_dev.AmethystDevApplication  : No active profile set, falling back to 1 default profile: "default"
+2023-09-18T22:41:31.094+02:00  INFO 18068 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-18T22:41:31.150+02:00  INFO 18068 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 7 JPA repository interfaces.
+2023-09-18T22:41:31.528+02:00  INFO 18068 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-18T22:41:31.534+02:00  INFO 18068 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-18T22:41:31.534+02:00  INFO 18068 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-18T22:41:31.604+02:00  INFO 18068 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-18T22:41:31.605+02:00  INFO 18068 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1075 ms
+2023-09-18T22:41:31.770+02:00  INFO 18068 --- [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.5.1 by Redgate
+2023-09-18T22:41:31.770+02:00  INFO 18068 --- [main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#9.5.1
+2023-09-18T22:41:31.770+02:00  INFO 18068 --- [main] o.f.c.internal.license.VersionPrinter    : 
+2023-09-18T22:41:31.775+02:00  INFO 18068 --- [main] o.f.c.i.resource.ResourceNameValidator   : 1 SQL migrations were detected but not run because they did not follow the filename convention.
+2023-09-18T22:41:31.775+02:00  INFO 18068 --- [main] o.f.c.i.resource.ResourceNameValidator   : If this is in error, enable debug logging or 'validateMigrationNaming' to fail fast and see a list of the invalid file names.
+2023-09-18T22:41:31.903+02:00  INFO 18068 --- [main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:mariadb://ametis.xyz/project_amethyst_dev2 (MariaDB 10.6)
+2023-09-18T22:41:32.429+02:00  INFO 18068 --- [main] o.f.core.internal.command.DbValidate     : Successfully validated 10 migrations (execution time 00:00.233s)
+2023-09-18T22:41:32.836+02:00  INFO 18068 --- [main] o.f.core.internal.command.DbMigrate      : Current version of schema `project_amethyst_dev2`: 1.5
+2023-09-18T22:41:32.867+02:00  INFO 18068 --- [main] o.f.core.internal.command.DbMigrate      : Schema `project_amethyst_dev2` is up to date. No migration necessary.
+2023-09-18T22:41:33.086+02:00  INFO 18068 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-18T22:41:33.121+02:00  INFO 18068 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-09-18T22:41:33.307+02:00  INFO 18068 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-18T22:41:33.564+02:00  INFO 18068 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@246df37b
+2023-09-18T22:41:33.565+02:00  INFO 18068 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-18T22:41:33.635+02:00  INFO 18068 --- [main] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2023-09-18T22:41:34.254+02:00  INFO 18068 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-18T22:41:34.261+02:00  INFO 18068 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T22:41:34.900+02:00  WARN 18068 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-18T22:41:35.295+02:00  INFO 18068 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2023-09-18T22:41:35.355+02:00  INFO 18068 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-18T22:41:35.367+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T22:41:35.368+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T22:41:35.368+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T22:41:35.368+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T22:41:35.368+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T22:41:35.901+02:00  INFO 18068 --- [main] net.dv8tion.jda.api.JDA                  : Login Successful!
+2023-09-18T22:41:36.243+02:00  INFO 18068 --- [JDA MainWS-ReadThread] n.d.j.internal.requests.WebSocketClient  : Connected to WebSocket
+2023-09-18T22:41:37.607+02:00  INFO 18068 --- [JDA MainWS-ReadThread] net.dv8tion.jda.api.JDA                  : Finished Loading!
+2023-09-18T22:41:37.615+02:00  INFO 18068 --- [main] c.r.amethyst_dev.AmethystDevApplication  : Started AmethystDevApplication in 7.387 seconds (process running for 7.859)
+2023-09-18T22:41:37.952+02:00  INFO 18068 --- [RMI TCP Connection(3)-26.108.94.108] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-18T22:41:37.952+02:00  INFO 18068 --- [RMI TCP Connection(3)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-09-18T22:41:37.953+02:00  INFO 18068 --- [RMI TCP Connection(3)-26.108.94.108] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-09-18T22:41:38.049+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2023-09-18T22:41:38.206+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.mariadb.jdbc.Connection@c6e91b9
+2023-09-18T22:41:38.206+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2023-09-18T22:41:38.237+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2023-09-18T22:41:38.470+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.mariadb.jdbc.Connection@6345f0a
+2023-09-18T22:41:38.471+02:00  INFO 18068 --- [RMI TCP Connection(2)-26.108.94.108] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2023-09-18T22:58:15.378+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: find cache
+2023-09-18T22:59:55.376+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: publicuser cache
+2023-09-18T23:01:35.367+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: skins cache
+2023-09-18T23:03:15.377+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: heads cache
+2023-09-18T23:04:55.378+02:00  INFO 18068 --- [scheduling-1] c.r.a.Services.DiscordBotService         : Emptying: PagableUsers cache
+2023-09-18T23:09:39.603+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2023-09-18T23:09:39.747+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2023-09-18T23:09:39.747+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2023-09-18T23:09:39.904+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2023-09-18T23:09:39.905+02:00  INFO 18068 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-18T23:09:39.907+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-18T23:09:40.060+02:00  INFO 18068 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

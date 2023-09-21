@@ -1,6 +1,6 @@
 package com.rij.amethyst_dev.webSockets.GuildSocket;
 
-import com.rij.amethyst_dev.bot.DiscordBotService;
+import com.rij.amethyst_dev.Services.DiscordBotService;
 import com.rij.amethyst_dev.webSockets.Helper;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -8,13 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class GuildSocketHandler extends TextWebSocketHandler {
     //ws://localhost:8080/api/v1/guild-socket?dsid=654684984

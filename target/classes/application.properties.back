@@ -7,7 +7,7 @@ spring.jpa.hibernate.ddl-auto= none
 
 discordoauth.id = 985218368007192608
 discordoauth.secret = Tm9PJKQ87Ik3hYMtf9TU2XUcgguyAYsg
-discordoauth.redirecturi = http://localhost:8080/api/v1/redirect
+discordoauth.redirecturi = http://localhost:8080/api/v2/redirect
 discordoauth.redirecturl = http://localhost:3000/
 
 discord.bot.token = OTg1MjE4MzY4MDA3MTkyNjA4.GxwNyQ.7l3G5GVeDKav9QPp5DCQ3_q1j7S4w4BeC2gVNk

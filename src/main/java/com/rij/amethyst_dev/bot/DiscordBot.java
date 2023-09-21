@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -27,11 +30,11 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
     private JDA jda;
 
     private final MessageSource messageSource;
-    private final GuildSocketService guildSocketService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public DiscordBot(MessageSource messageSource, GuildSocketService guildSocketService) {
+    public DiscordBot(MessageSource messageSource, ApplicationEventPublisher eventPublisher) {
         this.messageSource = messageSource;
-        this.guildSocketService = guildSocketService;
+        this.eventPublisher = eventPublisher;
     }
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -39,16 +42,17 @@ public class DiscordBot implements ApplicationListener<ContextRefreshedEvent> {
             jda = JDABuilder.createDefault(Token)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     //.addEventListeners(new MyEventListener()) // Add your event listener(s)
+                    .setChunkingFilter(ChunkingFilter.ALL) // enable member chunking for all guilds
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setActivity(Activity.playing("Hello, Discord!")) // Set the bot's activity
                     .build().awaitReady();
 
-            System.out.println("Discord Bot Started");
+            System.out.println("Discord Bot (" + jda.getSelfUser().getName() +") Started");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        jda.addEventListener(new GuildJoin(GuildID, guildSocketService));
-        //jda.addEventListener(new MessageReaction(jda));
+        jda.addEventListener(new GuildJoin(GuildID, eventPublisher));
 
         jda.updateCommands().addCommands(
                 Commands.slash("hello", "a")

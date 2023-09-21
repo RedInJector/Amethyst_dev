@@ -1,19 +1,30 @@
 package com.rij.amethyst_dev.Helpers;
 
-import java.util.Random;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class RandomStringGenerator {
     private static final String symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    public static String generate(int length) {
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder(length);
+    private static final SecureRandom secureRandom = new SecureRandom();
 
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(symbols.length());
-            char randomChar = symbols.charAt(index);
-            sb.append(randomChar);
+    public static String generate(int length) {
+        if (length <= 0) {
+            throw new IllegalArgumentException("Length must be a positive integer");
         }
 
-        return sb.toString();
+        char[] randomChars = new char[length];
+
+        for (int i = 0; i < length; i++) {
+            int index = secureRandom.nextInt(symbols.length());
+            randomChars[i] = symbols.charAt(index);
+        }
+
+        return new String(randomChars);
+    }
+
+    public static String generateAccessKey(){
+
+        return generate(64);
     }
 }
