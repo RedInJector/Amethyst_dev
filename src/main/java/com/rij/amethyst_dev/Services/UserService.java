@@ -13,6 +13,7 @@ import com.rij.amethyst_dev.Repositories.AccessTokensRepository;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Repositories.UserRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
+import io.mokulu.discord.oauth.model.TokensResponse;
 import org.redinjector.discord.oAuth2.models.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -71,7 +72,7 @@ public class UserService {
         }
         return existinguser;
     }
-    public void saveOauth(User user, Token token){
+    public void saveOauth(User user, TokensResponse token){
         if(user.getOauth() != null){
             user.getOauth().setAccessToken(token.getAccessToken());
             user.getOauth().setRefreshToken(token.getRefreshToken());

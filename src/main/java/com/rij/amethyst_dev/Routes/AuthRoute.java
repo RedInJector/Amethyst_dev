@@ -1,17 +1,15 @@
 package com.rij.amethyst_dev.Routes;
 
 import com.rij.amethyst_dev.Configuration.oAuthConfig;
-import com.rij.amethyst_dev.Enums.UserRoles;
-import com.rij.amethyst_dev.events.UserRegistered;
+import com.rij.amethyst_dev.Services.DiscordOauthService;
 import com.rij.amethyst_dev.Services.Authorizator;
 import com.rij.amethyst_dev.Helpers.RandomStringGenerator;
 import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Services.UserService;
+import io.mokulu.discord.oauth.DiscordAPI;
+import io.mokulu.discord.oauth.model.TokensResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.redinjector.discord.oAuth2.DiscordOAuth2;
-import org.redinjector.discord.oAuth2.models.DiscordUser;
-import org.redinjector.discord.oAuth2.models.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.IOException;
 
 
 @RestController
@@ -30,14 +30,16 @@ public class AuthRoute {
     private final oAuthConfig oauthConfig;
     private final Authorizator authorizator;
     private final ApplicationEventPublisher eventPublisher;
+    private final DiscordOauthService discordOauthService;
     Logger logger = LoggerFactory.getLogger(AuthRoute.class);
 
     @Autowired
-    public AuthRoute(UserService userService, oAuthConfig oauthConfig, Authorizator authorizator, ApplicationEventPublisher eventPublisher) {
+    public AuthRoute(UserService userService, oAuthConfig oauthConfig, Authorizator authorizator, ApplicationEventPublisher eventPublisher, DiscordOauthService discordOauthService) {
         this.userService = userService;
         this.oauthConfig = oauthConfig;
         this.authorizator = authorizator;
         this.eventPublisher = eventPublisher;
+        this.discordOauthService = discordOauthService;
     }
 
 
@@ -46,20 +48,30 @@ public class AuthRoute {
         if(code.isEmpty())
             return new RedirectView(oauthConfig.redirecturl);
 
-        Token token = DiscordOAuth2.getToken(code);
-
-        if(token == null)
+        TokensResponse tokensResponse;
+        try {
+            tokensResponse = discordOauthService.getDiscordOAuth().getTokens(code);
+        } catch (IOException e) {
+            logger.error(String.valueOf(e));
             return new RedirectView(oauthConfig.redirecturl);
+        }
 
-        DiscordUser discordUser = DiscordOAuth2.getDiscordUser(token);
+        String token = tokensResponse.getAccessToken();
 
-        User user = User.getUserFromDiscordUser(discordUser);
+        io.mokulu.discord.oauth.model.User discordUser;
+        try {
+            discordUser = new DiscordAPI(token).fetchUser();
+        } catch (IOException e) {
+            logger.error(String.valueOf(e));
+            return new RedirectView(oauthConfig.redirecturl);
+        }
 
-
+        User user = User.getFromMokuluDiscordAPIUser(discordUser);
 
         user = userService.saveUserIfNotExists(user);
 
-        userService.saveOauth(user, token);
+
+        userService.saveOauth(user, tokensResponse);
 
 
         String accessToken = RandomStringGenerator.generateAccessKey();

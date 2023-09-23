@@ -1,6 +1,7 @@
 package com.rij.amethyst_dev;
 
 import com.rij.amethyst_dev.Configuration.oAuthConfig;
+import io.mokulu.discord.oauth.DiscordOAuth;
 import org.redinjector.discord.oAuth2.DiscordOAuth2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,8 @@ public class AmethystDevApplication {
 
 
         SpringApplication.run(AmethystDevApplication.class, args);
+
+
 
         DiscordOAuth2.setConstraints(oauthConfig.id, oauthConfig.secret, oauthConfig.redirecturi);
     }
