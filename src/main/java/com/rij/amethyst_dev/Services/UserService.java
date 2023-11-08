@@ -4,7 +4,6 @@ import com.rij.amethyst_dev.DTO.Admin.UserPages;
 import com.rij.amethyst_dev.DTO.User.Builder.UserDataDTOBuilder;
 import com.rij.amethyst_dev.DTO.User.UserDataDTO;
 import com.rij.amethyst_dev.Enums.UserRoles;
-import com.rij.amethyst_dev.Helpers.TimeTester;
 import com.rij.amethyst_dev.events.UserRegisteredEvent;
 import com.rij.amethyst_dev.models.Userdb.MinecraftPlayer;
 import com.rij.amethyst_dev.Repositories.MinecraftPlayerRepository;
@@ -14,7 +13,7 @@ import com.rij.amethyst_dev.models.Userdb.User;
 import com.rij.amethyst_dev.Repositories.UserRepository;
 import com.rij.amethyst_dev.models.oAuth.Oauth;
 import io.mokulu.discord.oauth.model.TokensResponse;
-import org.redinjector.discord.oAuth2.models.Token;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;

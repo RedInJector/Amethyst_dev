@@ -99,20 +99,7 @@ public class User {
         }
     }
 
-    @Deprecated
-    public static User getUserFromDiscordUser(org.redinjector.discord.oAuth2.models.DiscordUser discordUser){
-        User user = new User();
-        DiscordUser duser = new DiscordUser();
-        duser.setDiscordId(discordUser.getId());
-        duser.setDiscordVerified(discordUser.isVerified());
-        duser.setAvatarUrl(discordUser.getAvatar());
-        duser.setEmail(discordUser.getEmail());
-        duser.setPublicUsername(discordUser.getUsername());
-        duser.setDiscriminator(discordUser.getDiscriminator());
 
-        user.setDiscordUser(duser);
-        return user;
-    }
 
     public static User getFromMokuluDiscordAPIUser(io.mokulu.discord.oauth.model.User discordUser){
         User user = new User();
